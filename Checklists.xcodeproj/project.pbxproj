@@ -7,21 +7,27 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+<<<<<<< HEAD
 		232B8C111FC3140600D9C5C0 /* AddItemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 232B8C101FC3140600D9C5C0 /* AddItemViewController.swift */; };
 		232BFFEB1FC06CC4008FBEEE /* ChecklistItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 232BFFEA1FC06CC4008FBEEE /* ChecklistItem.swift */; };
+=======
+>>>>>>> parent of 700ff8b... 11/19/2017
 		2363654D1FC0163F00BB430D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2363654C1FC0163F00BB430D /* AppDelegate.swift */; };
-		2363654F1FC0163F00BB430D /* ChecklistsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2363654E1FC0163F00BB430D /* ChecklistsViewController.swift */; };
+		2363654F1FC0163F00BB430D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2363654E1FC0163F00BB430D /* ViewController.swift */; };
 		236365521FC0163F00BB430D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 236365501FC0163F00BB430D /* Main.storyboard */; };
 		236365541FC0163F00BB430D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 236365531FC0163F00BB430D /* Assets.xcassets */; };
 		236365571FC0163F00BB430D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 236365551FC0163F00BB430D /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+<<<<<<< HEAD
 		232B8C101FC3140600D9C5C0 /* AddItemViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddItemViewController.swift; sourceTree = "<group>"; };
 		232BFFEA1FC06CC4008FBEEE /* ChecklistItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChecklistItem.swift; sourceTree = "<group>"; };
+=======
+>>>>>>> parent of 700ff8b... 11/19/2017
 		236365491FC0163F00BB430D /* Checklists.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Checklists.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2363654C1FC0163F00BB430D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		2363654E1FC0163F00BB430D /* ChecklistsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChecklistsViewController.swift; sourceTree = "<group>"; };
+		2363654E1FC0163F00BB430D /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		236365511FC0163F00BB430D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		236365531FC0163F00BB430D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		236365561FC0163F00BB430D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -59,9 +65,13 @@
 			isa = PBXGroup;
 			children = (
 				2363654C1FC0163F00BB430D /* AppDelegate.swift */,
+<<<<<<< HEAD
 				2363654E1FC0163F00BB430D /* ChecklistsViewController.swift */,
 				232BFFEA1FC06CC4008FBEEE /* ChecklistItem.swift */,
 				232B8C101FC3140600D9C5C0 /* AddItemViewController.swift */,
+=======
+				2363654E1FC0163F00BB430D /* ViewController.swift */,
+>>>>>>> parent of 700ff8b... 11/19/2017
 				236365501FC0163F00BB430D /* Main.storyboard */,
 				236365531FC0163F00BB430D /* Assets.xcassets */,
 				236365551FC0163F00BB430D /* LaunchScreen.storyboard */,
@@ -142,9 +152,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+<<<<<<< HEAD
 				2363654F1FC0163F00BB430D /* ChecklistsViewController.swift in Sources */,
 				232B8C111FC3140600D9C5C0 /* AddItemViewController.swift in Sources */,
 				232BFFEB1FC06CC4008FBEEE /* ChecklistItem.swift in Sources */,
+=======
+				2363654F1FC0163F00BB430D /* ViewController.swift in Sources */,
+>>>>>>> parent of 700ff8b... 11/19/2017
 				2363654D1FC0163F00BB430D /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
