@@ -42,7 +42,7 @@
                     <navigationItem key="navigationItem" title="Checklists" id="Okh-PQ-Kl3">
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="pUe-bN-Iq9">
                             <connections>
-                                <segue destination="OQi-lZ-rps" kind="presentation" id="n9a-mI-SVM"/>
+                                <action selector="addItem" destination="AuL-6H-PFd" id="g1V-Ng-eY9"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -50,62 +50,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Hpy-w1-IVZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="352.80000000000001" y="73.313343328335833"/>
-        </scene>
-        <!--Add Item-->
-        <scene sceneID="PaK-JI-5qe">
-            <objects>
-                <tableViewController title="Add Item" id="GgW-qB-HOJ" customClass="AddItemViewController" customModule="Checklists" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="krO-fT-PUR">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
-                        <sections>
-                            <tableViewSection id="7fR-cq-WfC">
-                                <cells>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" id="Mwa-gM-l5s">
-                                        <rect key="frame" x="0.0" y="35" width="375" height="44"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Mwa-gM-l5s" id="Aqw-K9-Wg6">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="R9r-9z-FMM">
-                                                    <rect key="frame" x="22" y="0.0" width="337" height="44"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <nil key="textColor"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                    <textInputTraits key="textInputTraits"/>
-                                                </textField>
-                                            </subviews>
-                                        </tableViewCellContentView>
-                                    </tableViewCell>
-                                </cells>
-                            </tableViewSection>
-                        </sections>
-                        <connections>
-                            <outlet property="dataSource" destination="GgW-qB-HOJ" id="DdJ-tE-gDH"/>
-                            <outlet property="delegate" destination="GgW-qB-HOJ" id="Akl-8X-ddg"/>
-                        </connections>
-                    </tableView>
-                    <navigationItem key="navigationItem" id="9n5-FZ-xH7">
-                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="znT-xb-Za7">
-                            <connections>
-                                <action selector="cancel" destination="GgW-qB-HOJ" id="bCl-dX-xHG"/>
-                            </connections>
-                        </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" style="done" systemItem="done" id="j1p-lR-es2">
-                            <connections>
-                                <action selector="done" destination="GgW-qB-HOJ" id="eG2-7d-GQe"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
-                    <connections>
-                        <outlet property="textField" destination="R9r-9z-FMM" id="B59-HJ-3Cq"/>
-                    </connections>
-                </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="bcr-AU-LNi" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1837.5999999999999" y="72.413793103448285"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="hJL-Bx-byP">
@@ -123,6 +67,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nRn-pk-ahq" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
+<<<<<<< HEAD
             <point key="canvasLocation" x="-383" y="73"/>
         </scene>
         <!--Navigation Controller-->
@@ -150,6 +95,9 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
 >>>>>>> parent of 700ff8b... 11/19/2017
+=======
+            <point key="canvasLocation" x="-468" y="73"/>
+>>>>>>> parent of 1299823... 11/20/2017
         </scene>
     </scenes>
 </document>

@@ -8,7 +8,10 @@
 
 /* Begin PBXBuildFile section */
 <<<<<<< HEAD
+<<<<<<< HEAD
 		232B8C111FC3140600D9C5C0 /* AddItemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 232B8C101FC3140600D9C5C0 /* AddItemViewController.swift */; };
+=======
+>>>>>>> parent of 1299823... 11/20/2017
 		232BFFEB1FC06CC4008FBEEE /* ChecklistItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 232BFFEA1FC06CC4008FBEEE /* ChecklistItem.swift */; };
 =======
 >>>>>>> parent of 700ff8b... 11/19/2017
@@ -21,7 +24,10 @@
 
 /* Begin PBXFileReference section */
 <<<<<<< HEAD
+<<<<<<< HEAD
 		232B8C101FC3140600D9C5C0 /* AddItemViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddItemViewController.swift; sourceTree = "<group>"; };
+=======
+>>>>>>> parent of 1299823... 11/20/2017
 		232BFFEA1FC06CC4008FBEEE /* ChecklistItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChecklistItem.swift; sourceTree = "<group>"; };
 =======
 >>>>>>> parent of 700ff8b... 11/19/2017
@@ -68,10 +74,13 @@
 <<<<<<< HEAD
 				2363654E1FC0163F00BB430D /* ChecklistsViewController.swift */,
 				232BFFEA1FC06CC4008FBEEE /* ChecklistItem.swift */,
+<<<<<<< HEAD
 				232B8C101FC3140600D9C5C0 /* AddItemViewController.swift */,
 =======
 				2363654E1FC0163F00BB430D /* ViewController.swift */,
 >>>>>>> parent of 700ff8b... 11/19/2017
+=======
+>>>>>>> parent of 1299823... 11/20/2017
 				236365501FC0163F00BB430D /* Main.storyboard */,
 				236365531FC0163F00BB430D /* Assets.xcassets */,
 				236365551FC0163F00BB430D /* LaunchScreen.storyboard */,
@@ -154,7 +163,6 @@
 			files = (
 <<<<<<< HEAD
 				2363654F1FC0163F00BB430D /* ChecklistsViewController.swift in Sources */,
-				232B8C111FC3140600D9C5C0 /* AddItemViewController.swift in Sources */,
 				232BFFEB1FC06CC4008FBEEE /* ChecklistItem.swift in Sources */,
 =======
 				2363654F1FC0163F00BB430D /* ViewController.swift in Sources */,
