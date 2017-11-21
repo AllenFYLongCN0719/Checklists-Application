@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class AddItemViewController: UITableViewController{
+class AddItemViewController: UITableViewController, UITextFieldDelegate{
     
     @IBOutlet weak var textField: UITextField!
     @IBAction func cancel(){
@@ -64,7 +64,5 @@ class AddItemViewController: UITableViewController{
         return true
     }
     
-    class AddItemViewController: UITableViewController,UITextFieldDelegate{
-
-    }
+    
 }
