@@ -8,7 +8,17 @@
 
 import UIKit
 
-class ChecklistViewController: UITableViewController {
+protocol AddItemViewControllerDelegate: class {
+    //搭建ChecklistViewController与AddItemViewController的通信桥梁。
+    //protocol 协议。是一组方法的名称列表。表示：任何遵循这一协议的对象必须执行其中的方法。
+    func addItemControllerDidCancel(_ controller: AddItemViewController)
+    //用于用户点击Cancel时
+    func addItemController(_ controller: AddItemViewController, didFinishadding item: ChecklistItem)
+    //用于用户点击Done按钮时。在这个情况下，didFinishAdding参数会传递新的ChecklistItem对象。
+}
+
+class ChecklistViewController: UITableViewController,AddItemViewControllerDelegate {
+    //添加AddItemViewControllerDelegate让ChecklistViewController承诺执行AddItemViewControllerDelegate协议中的内容
     
     var items: [ChecklistItem]
     //这一行声明了items会用来存储一个ChecklistItem对象的数组
@@ -132,6 +142,25 @@ class ChecklistViewController: UITableViewController {
         tableView.deselectRow(at: indexPath, animated: true)
         }
     
+    //使用prepare(for: sender: )可以使你在新的视图控制器展现前向它发送数据。
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    //这里是告诉AddItemViewController现在ChecklistViewController时它的委托了。
+        
+        //1 因为前一个视图控制器可能具有多个转场，所以最好给每一个转场赋予一个独一无二的名称以区分它们，并且每次操作前先检查是不是正确的转场。swift中的“==”等于比较符，不仅用于数字，也可以用于字符串和大多数类型的对象。
+        if segue.identifier == "AddItem"{
+        //在故事模版中的两个页面中间的转场icon的属性检查器中找到Identifier并且键入"AddItem"
+            
+        //2 新的视图控制器可以通过segue.destination被找到。故事模版中转场并不是直接指向AddItemViewController，而是指向包含它的导航控制器（navigation controller）。因此首先你要抓取到这个UINavigationController对象。
+        let navigationController = segue.destination as! UINavigationController
+        
+        //3 为了找到AddItemViewController，你可以查看导航控制器的顶层视图（topViewController）属性。这个属性正是引用目前被嵌入导航控制的界面。
+        let controller = navigationController.topViewController as! AddItemViewController
+        
+        //4 一旦你有了一个指向AddItemViewController的引用，你设置它的delegate属性到self，至此这个链接就完毕了。从现在起AddItemViewController就知道了，这个self指代的对象就是它的委托。当你在ChecklistViewController.swift中写了self时，这个self就指代ChecklistViewController。
+            controller.delegate = self
+        }
+    }
+    
     //添加从右向左滑的删除功能
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         //commit editingStyle会激活华东删除功能
@@ -143,31 +172,51 @@ class ChecklistViewController: UITableViewController {
         //告诉table view删除这一行
     }
     
+    //已经被AddItemViewController(didFinishadding)所替代
     //加号的动作方法
-    @IBAction func addItem() {
+//    @IBAction func addItem() {
+//        let newRowIndex = items.count
+//        //需要计算新加行在数组中的索引index编号，使table view正确的更新新的一行
+//        //将新的一行的index放到局部常量newRowIndex中。
+//
+//        let item = ChecklistItem()
+//        //创建一个新的ChecklistItem
+//        item.text = "I am a new row"
+//        item.checked = false
+//        //添加新的string和cell
+//        items.append(item)
+//        //将新的对象添加到数据模型的数组中去，也就是ChecklistItem()
+//
+//        let indexPath = IndexPath(row: newRowIndex,section: 0)
+//        //使用Index-Path来标示行号，所以使用一个indexPath对象来标示这个新的行。所以这里是使用newRowIndex的值。
+//        let indexPaths = [indexPath]
+//        //创建一个临时的数组[indexPath]来保存刚才生成的indexPath,并放在局部常量indexPaths中。
+//
+//        tableView.insertRows(at: indexPaths, with: .automatic)
+//        //务必必须告诉table view有新的数据。因为数据模型与视图必须保持同步。
+//        //使用insertRows来告诉table view添加新的一行。但是方法名称Rows是复数，意味着可以通过这个方法，一次性添加许多行。
+//        //最后通知table view插入新的这一行，参数"with: .automatic"参数的作用是：使table view插入新行时，闪现一个动画。
+//
+//
+//    }
+    
+    //将AddItemViewControllerDelegate协议中的方法加入ChecklistViewController
+    func addItemControllerDidCancel(_ controller: AddItemViewController) {
+        dismiss(animated: true, completion: nil)
+    }
+    
+    //将新的ChecklistItem添加到数据模型和table view中
+    func addItemController(_ controller: AddItemViewController, didFinishadding item: ChecklistItem) {
         let newRowIndex = items.count
-        //需要计算新加行在数组中的索引index编号，使table view正确的更新新的一行
-        //将新的一行的index放到局部常量newRowIndex中。
-        
-        let item = ChecklistItem()
-        //创建一个新的ChecklistItem
-        item.text = "I am a new row"
-        item.checked = false
-        //添加新的string和cell
         items.append(item)
-        //将新的对象添加到数据模型的数组中去，也就是ChecklistItem()
+        //添加到数据模型
         
-        let indexPath = IndexPath(row: newRowIndex,section: 0)
-        //使用Index-Path来标示行号，所以使用一个indexPath对象来标示这个新的行。所以这里是使用newRowIndex的值。
+        let indexPath = IndexPath(row: newRowIndex, section: 0)
         let indexPaths = [indexPath]
-        //创建一个临时的数组[indexPath]来保存刚才生成的indexPath,并放在局部常量indexPaths中。
-        
         tableView.insertRows(at: indexPaths, with: .automatic)
-        //务必必须告诉table view有新的数据。因为数据模型与视图必须保持同步。
-        //使用insertRows来告诉table view添加新的一行。但是方法名称Rows是复数，意味着可以通过这个方法，一次性添加许多行。
-        //最后通知table view插入新的这一行，参数"with: .automatic"参数的作用是：使table view插入新行时，闪现一个动画。
-
+        //添加到table view
         
+        dismiss(animated: true, completion: nil)
     }
     
 }
