@@ -6,6 +6,8 @@
 //  Copyright © 2017年 AllenLong. All rights reserved.
     //
 
+//Accessory在table view cell(TableView->ChecklistItem)的属性面板里 in storyboard。
+
 import UIKit
 
 protocol AddItemViewControllerDelegate: class {
@@ -15,6 +17,7 @@ protocol AddItemViewControllerDelegate: class {
     //用于用户点击Cancel时
     func addItemController(_ controller: AddItemViewController, didFinishadding item: ChecklistItem)
     //用于用户点击Done按钮时。在这个情况下，didFinishAdding参数会传递新的ChecklistItem对象。
+    func addItemController(_ controller: AddItemViewController, didFinishEditing item: ChecklistItem)
 }
 
 class ChecklistViewController: UITableViewController,AddItemViewControllerDelegate {
@@ -24,6 +27,7 @@ class ChecklistViewController: UITableViewController,AddItemViewControllerDelega
     //这一行声明了items会用来存储一个ChecklistItem对象的数组
     //但是它并没有实际创建一个数组
     //在这一时刻，items还没有值
+    
     
     required init?(coder aDecoder: NSCoder) {
         //对象的init方法或初始化器
@@ -78,10 +82,13 @@ class ChecklistViewController: UITableViewController,AddItemViewControllerDelega
     func configureCheckmark(for cell: UITableViewCell, with item: ChecklistItem){
         //创建方法单独进行处理对勾。
         //with是参数外部名称，item是参数内部名称
+        
+        let label = cell.viewWithTag(1001) as! UILabel
+        
         if  item.checked{
-            cell.accessoryType = .checkmark
+            label.text = "√"
         } else{
-            cell.accessoryType = .none
+            label.text = ""
         }
         
     }
@@ -158,6 +165,16 @@ class ChecklistViewController: UITableViewController,AddItemViewControllerDelega
         
         //4 一旦你有了一个指向AddItemViewController的引用，你设置它的delegate属性到self，至此这个链接就完毕了。从现在起AddItemViewController就知道了，这个self指代的对象就是它的委托。当你在ChecklistViewController.swift中写了self时，这个self就指代ChecklistViewController。
             controller.delegate = self
+        } else if segue.identifier == "EditItem"{
+            let navigationController = segue.destination as! UINavigationController
+            let controller = navigationController.topViewController as! AddItemViewController
+            controller.delegate = self
+            
+            if let indexPath = tableView.indexPath(for: sender as! UITableViewCell) {
+                //设置了一个UITableViewCell对象用于定位被点击的那一行的行号相对应的index-path，通过使用tableView.indexPath(for:)
+                //tableView.indexPath(for:)的返回类型为IndexPath?，是一个可选型，这就意味着它可能返回nil。这就是为什么在你使用它前需要用if let来解包的原因。
+                controller.itemToEdit = items[indexPath.row]
+            }
         }
     }
     
@@ -216,6 +233,20 @@ class ChecklistViewController: UITableViewController,AddItemViewControllerDelega
         tableView.insertRows(at: indexPaths, with: .automatic)
         //添加到table view
         
+        dismiss(animated: true, completion: nil)
+    }
+    
+    //添加新的协议内容addItemController(didFinishEditing)
+    func addItemController(_ controller: AddItemViewController, didFinishEditing item: ChecklistItem) {
+        if let index = items.index(of: item) {
+            //你需要从cell中读取所需的IndexPath，首先你就需要寻找到ChecklistItem对象的行号。行号和ChecklistItem在items数组中的索引值是一致的，然后你通过index(of)方法来返回这个index。
+            //因为不能在任意对象上使用index(of)，只能在“相同”的对象上使用它。index(of)以某种方式对你在数组中寻找的对象进与调用它的对象行比较，看看它们是否相等。
+            //所以第一种方式是在ChecklistItem.swift中添加"NSObject"进行比较。将ChecklistItem建立在NSObject之上，就可以使它安全的进行比较了。
+            let indexPath = IndexPath(row: index, section: 0)
+            if let cell = tableView.cellForRow(at: indexPath) {
+                configureText(for: cell, with: item)
+            }
+        }
         dismiss(animated: true, completion: nil)
     }
     

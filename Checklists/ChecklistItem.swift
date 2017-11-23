@@ -7,7 +7,7 @@
 //
 
 import Foundation
-class ChecklistItem{
+class ChecklistItem: NSObject {
     var text = "" //储存文本内容
     var checked = false //决定cell是否显示对勾符号
     

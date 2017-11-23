@@ -25,6 +25,10 @@ class AddItemViewController: UITableViewController, UITextFieldDelegate{
     
     @IBOutlet weak var textField: UITextField!
     
+    var itemToEdit: ChecklistItem?
+    //这个变量包含用户准备编辑的ChecklistItem对象。但是当新增一个待办项目时，itemToEdit会是nil，这就是视图控制器如何区分新增和编辑的。
+    //所以它必须时可选型的。这个就是问号的作用。
+    
     @IBAction func cancel(){
         //IBAction永远不返回值
 //        dismiss(animated: true, completion: nil )
@@ -36,14 +40,32 @@ class AddItemViewController: UITableViewController, UITextFieldDelegate{
 //        print("Contents of the text filed: \(textField.text!)")
 //        dismiss(animated: true, completion: nil)
         
-        let item = ChecklistItem()
-        item.text = textField.text!
-        item.checked = false
-        
-        delegate?.addItemController(self, didFinishadding: item)
+        if let item = itemToEdit {
+            //首先检查itemToEdit是否包含一个对象，然后使用if let进行解包
+            item.text = textField.text!
+            //不为空则在文本框中放入一条已经存在的ChecklistItem对象
+            delegate?.addItemController(self, didFinishEditing: item)
+            //调用didFinishEditing方法
+        } else {
+            let item = ChecklistItem()
+            item.text = textField.text!
+            item.checked = false
+            delegate?.addItemController(self, didFinishadding: item)
+        }
     }
     
-    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        if let item = itemToEdit {
+            //当itemToEdit不为nil时.
+            //又因为itemToEdit是一个可选型变量，所以必须使用if let进行使用可选型变量，并对其进行解包
+            title = "Edit Item"
+            //改变导航栏名称为“Edit Item”
+            textField.text = item.text
+            doneBarButton.isEnabled = true
+        }
+    }
     
     //table view的委托方法。当用户点击某一行时，table view发送一个“willSelectRowAt”的委托，意思是“我马上要选择这一行了”。
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
@@ -86,6 +108,7 @@ class AddItemViewController: UITableViewController, UITextFieldDelegate{
         //            something = (some condition)
         return true
     }
+    
     
     
     
