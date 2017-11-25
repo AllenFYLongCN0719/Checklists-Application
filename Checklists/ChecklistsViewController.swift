@@ -77,6 +77,37 @@ class ChecklistViewController: UITableViewController,ItemDetailViewControllerDel
         items.append(row6item)
         
         super.init(coder: aDecoder)
+        //调用了父级的init()。调用super.init(coder)，确保这个视图控制器的剩余部分可以正常的从故事模版中解码。
+        loadChecklistItems()
+        //调用其他的方法，这里是调用了一个新的方法，这个新方法的作用是从plist文件中读取数据。
+        
+        print("Documents folder is \(documentsDirectory())")
+        print("Data file path is \(dataFilePath())")
+    }
+    
+    func saveChecklistItem() {
+        let data = NSMutableData()
+        //数据被放置在一个NSMutableData对象中。
+        let archiver = NSKeyedArchiver(forWritingWith: data)
+        //NSCoder创建plist文件的形式，将数组编码（encode）并且将其中的所有ChecklistItem转换为二进制格式，这样就可以将这些数据写入文件了。
+        archiver.encode(items, forKey: "ChecklistItems")
+        //调用encode(with)需要在ChecklistItem.swift里添加NSCoding
+        archiver.finishEncoding()
+        data.write(to: dataFilePath(), atomically: true)
+        //将自己写入dataFilePath()路径指定的文件中。
+    }
+    
+    func loadChecklistItems() {
+        //1 将dataFilePath()的结果放到一个名叫path的临时常量中
+        let path = dataFilePath()
+        //2 试着从Checklists.plist中读取内容到一个新的数据对象中。关键字Try？的意思是“试试”，如果有数据对象就读出来，如果是nil就不读。所以这就是用if let解包的原因。
+        if let data = try?Data(contentsOf: path){
+            //3 当app找到Checklists.plist文件，读取整个数组，创建一个NSKeyedUnarchiver对象，也就是unarchiver，并且要求它将数据解码到items数组中。
+            let unarchiver = NSKeyedUnarchiver(forReadingWith: data)
+            items = unarchiver.decodeObject(forKey: "ChecklistItems") as! [ChecklistItem]
+            //这一步将文件中曾经未解码的ChecklistItem对象的拷贝填充到数组中。
+            unarchiver.finishDecoding()
+        }
     }
     
     func configureCheckmark(for cell: UITableViewCell, with item: ChecklistItem){
@@ -108,6 +139,21 @@ class ChecklistViewController: UITableViewController,ItemDetailViewControllerDel
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    
+    //创建用户内容的文档文件夹的地址
+    func documentsDirectory() -> URL {
+        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        return paths[0]
+    }
+    
+    //使用documentsDirectory()的返回结果构建了路径到存储办事项清单的文件。文件的名称是Checklists.plist，并且这个文件存储在文档目录中。
+    func dataFilePath() -> URL {
+        return documentsDirectory().appendingPathComponent("Checklists.plist")
+    }
+    
+
+    
     
     //data source(数据源)与table view交互。 获得数据源里的内容数量
     override func tableView(
@@ -147,6 +193,8 @@ class ChecklistViewController: UITableViewController,ItemDetailViewControllerDel
         
         
         tableView.deselectRow(at: indexPath, animated: true)
+        saveChecklistItem()
+        //该方法修改了items数组，所以需要调用保存方法
         }
     
     //使用prepare(for: sender: )可以使你在新的视图控制器展现前向它发送数据。
@@ -188,6 +236,8 @@ class ChecklistViewController: UITableViewController,ItemDetailViewControllerDel
         //使用一个额临时数组保存index—path对象，也就是这一行
         tableView.deleteRows(at: indexPaths, with: .automatic)
         //告诉table view删除这一行
+        saveChecklistItem()
+        //该方法修改了items数组，所以需要调用保存方法
     }
     
     //已经被ItemDetailViewController(didFinishadding)所替代
@@ -235,6 +285,8 @@ class ChecklistViewController: UITableViewController,ItemDetailViewControllerDel
         //添加到table view
         
         dismiss(animated: true, completion: nil)
+        saveChecklistItem()
+        //该方法修改了items数组，所以需要调用保存方法
     }
     
     //添加新的协议内容itemDetailController(didFinishEditing)
@@ -249,6 +301,8 @@ class ChecklistViewController: UITableViewController,ItemDetailViewControllerDel
             }
         }
         dismiss(animated: true, completion: nil)
+        saveChecklistItem()
+        //该方法修改了items数组，所以需要调用保存方法
     }
     
 }
