@@ -10,18 +10,18 @@
 
 import UIKit
 
-protocol AddItemViewControllerDelegate: class {
-    //搭建ChecklistViewController与AddItemViewController的通信桥梁。
+protocol ItemDetailViewControllerDelegate: class {
+    //搭建ChecklistViewController与ItemDetailViewController的通信桥梁。
     //protocol 协议。是一组方法的名称列表。表示：任何遵循这一协议的对象必须执行其中的方法。
-    func addItemControllerDidCancel(_ controller: AddItemViewController)
+    func itemDetailControllerDidCancel(_ controller: ItemDetailViewController)
     //用于用户点击Cancel时
-    func addItemController(_ controller: AddItemViewController, didFinishadding item: ChecklistItem)
+    func itemDetailController(_ controller: ItemDetailViewController, didFinishadding item: ChecklistItem)
     //用于用户点击Done按钮时。在这个情况下，didFinishAdding参数会传递新的ChecklistItem对象。
-    func addItemController(_ controller: AddItemViewController, didFinishEditing item: ChecklistItem)
+    func itemDetailController(_ controller: ItemDetailViewController, didFinishEditing item: ChecklistItem)
 }
 
-class ChecklistViewController: UITableViewController,AddItemViewControllerDelegate {
-    //添加AddItemViewControllerDelegate让ChecklistViewController承诺执行AddItemViewControllerDelegate协议中的内容
+class ChecklistViewController: UITableViewController,ItemDetailViewControllerDelegate {
+    //添加ItemDetailViewControllerDelegate让ChecklistViewController承诺执行ItemDetailViewControllerDelegate协议中的内容
     
     var items: [ChecklistItem]
     //这一行声明了items会用来存储一个ChecklistItem对象的数组
@@ -151,36 +151,37 @@ class ChecklistViewController: UITableViewController,AddItemViewControllerDelega
     
     //使用prepare(for: sender: )可以使你在新的视图控制器展现前向它发送数据。
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-    //这里是告诉AddItemViewController现在ChecklistViewController时它的委托了。
+    //这里是告诉ItemDetailViewController现在ChecklistViewController时它的委托了。
         
         //1 因为前一个视图控制器可能具有多个转场，所以最好给每一个转场赋予一个独一无二的名称以区分它们，并且每次操作前先检查是不是正确的转场。swift中的“==”等于比较符，不仅用于数字，也可以用于字符串和大多数类型的对象。
         if segue.identifier == "AddItem"{
         //在故事模版中的两个页面中间的转场icon的属性检查器中找到Identifier并且键入"AddItem"
             
-        //2 新的视图控制器可以通过segue.destination被找到。故事模版中转场并不是直接指向AddItemViewController，而是指向包含它的导航控制器（navigation controller）。因此首先你要抓取到这个UINavigationController对象。
+        //2 新的视图控制器可以通过segue.destination被找到。故事模版中转场并不是直接指向ItemDetailViewController，而是指向包含它的导航控制器（navigation controller）。因此首先你要抓取到这个UINavigationController对象。
         let navigationController = segue.destination as! UINavigationController
         
-        //3 为了找到AddItemViewController，你可以查看导航控制器的顶层视图（topViewController）属性。这个属性正是引用目前被嵌入导航控制的界面。
-        let controller = navigationController.topViewController as! AddItemViewController
+        //3 为了找到ItemDetailViewController，你可以查看导航控制器的顶层视图（topViewController）属性。这个属性正是引用目前被嵌入导航控制的界面。
+        let controller = navigationController.topViewController as! ItemDetailViewController
         
-        //4 一旦你有了一个指向AddItemViewController的引用，你设置它的delegate属性到self，至此这个链接就完毕了。从现在起AddItemViewController就知道了，这个self指代的对象就是它的委托。当你在ChecklistViewController.swift中写了self时，这个self就指代ChecklistViewController。
+        //4 一旦你有了一个指向ItemDetailViewController的引用，你设置它的delegate属性到self，至此这个链接就完毕了。从现在起ItemDetailViewController就知道了，这个self指代的对象就是它的委托。当你在ChecklistViewController.swift中写了self时，这个self就指代ChecklistViewController。
             controller.delegate = self
         } else if segue.identifier == "EditItem"{
             let navigationController = segue.destination as! UINavigationController
-            let controller = navigationController.topViewController as! AddItemViewController
+            let controller = navigationController.topViewController as! ItemDetailViewController
             controller.delegate = self
             
             if let indexPath = tableView.indexPath(for: sender as! UITableViewCell) {
                 //设置了一个UITableViewCell对象用于定位被点击的那一行的行号相对应的index-path，通过使用tableView.indexPath(for:)
                 //tableView.indexPath(for:)的返回类型为IndexPath?，是一个可选型，这就意味着它可能返回nil。这就是为什么在你使用它前需要用if let来解包的原因。
                 controller.itemToEdit = items[indexPath.row]
+                //将获取的行数放入itemToEdit
             }
         }
     }
     
     //添加从右向左滑的删除功能
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        //commit editingStyle会激活华东删除功能
+        //commit editingStyle会激活滑动删除功能
         items.remove(at: indexPath.row)
         //从数据模型中移除掉这条数据
         let indexPaths = [indexPath]
@@ -189,7 +190,7 @@ class ChecklistViewController: UITableViewController,AddItemViewControllerDelega
         //告诉table view删除这一行
     }
     
-    //已经被AddItemViewController(didFinishadding)所替代
+    //已经被ItemDetailViewController(didFinishadding)所替代
     //加号的动作方法
 //    @IBAction func addItem() {
 //        let newRowIndex = items.count
@@ -217,13 +218,13 @@ class ChecklistViewController: UITableViewController,AddItemViewControllerDelega
 //
 //    }
     
-    //将AddItemViewControllerDelegate协议中的方法加入ChecklistViewController
-    func addItemControllerDidCancel(_ controller: AddItemViewController) {
+    //将ItemDetailViewControllerDelegate协议中的方法加入ChecklistViewController
+    func itemDetailControllerDidCancel(_ controller: ItemDetailViewController) {
         dismiss(animated: true, completion: nil)
     }
     
     //将新的ChecklistItem添加到数据模型和table view中
-    func addItemController(_ controller: AddItemViewController, didFinishadding item: ChecklistItem) {
+    func itemDetailController(_ controller: ItemDetailViewController, didFinishadding item: ChecklistItem) {
         let newRowIndex = items.count
         items.append(item)
         //添加到数据模型
@@ -236,8 +237,8 @@ class ChecklistViewController: UITableViewController,AddItemViewControllerDelega
         dismiss(animated: true, completion: nil)
     }
     
-    //添加新的协议内容addItemController(didFinishEditing)
-    func addItemController(_ controller: AddItemViewController, didFinishEditing item: ChecklistItem) {
+    //添加新的协议内容itemDetailController(didFinishEditing)
+    func itemDetailController(_ controller: ItemDetailViewController, didFinishEditing item: ChecklistItem) {
         if let index = items.index(of: item) {
             //你需要从cell中读取所需的IndexPath，首先你就需要寻找到ChecklistItem对象的行号。行号和ChecklistItem在items数组中的索引值是一致的，然后你通过index(of)方法来返回这个index。
             //因为不能在任意对象上使用index(of)，只能在“相同”的对象上使用它。index(of)以某种方式对你在数组中寻找的对象进与调用它的对象行比较，看看它们是否相等。

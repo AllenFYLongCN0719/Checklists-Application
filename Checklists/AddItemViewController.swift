@@ -1,5 +1,5 @@
 //
-//  AddItemViewController.swift
+//  ItemDetailViewController.swift
 //  Checklists
 //
 //  Created by 龙富宇 on 2017/11/20.
@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class AddItemViewController: UITableViewController, UITextFieldDelegate{
+class ItemDetailViewController: UITableViewController, UITextFieldDelegate{
     
 //    五步定义委托
 //    在两个对象之间创建委托可以用以下固定的步骤，比如对象A是对象B的委托，对象B发送消息返回给对象A，步骤如下：
@@ -19,8 +19,8 @@ class AddItemViewController: UITableViewController, UITextFieldDelegate{
 //    4、让对象A遵守委托协议。将协议的名称放入类声明，class的哪一行，并且执行协议中的方法列表。
 //    5、告诉对象B，对象A现在是你的委托了。
 
-    weak var delegate: AddItemViewControllerDelegate?
-    //weak 描述委托和视图控制器的关系。叫做“弱引用”。 在这里ChecklistViewController强引用AddItemViewController,而AddItemViewController弱引用ChecklistViewController
+    weak var delegate: ItemDetailViewControllerDelegate?
+    //weak 描述委托和视图控制器的关系。叫做“弱引用”。 在这里ChecklistViewController强引用ItemDetailViewController,而ItemDetailViewController弱引用ChecklistViewController
     // ? 代表委托时可选型
     
     @IBOutlet weak var textField: UITextField!
@@ -32,7 +32,7 @@ class AddItemViewController: UITableViewController, UITextFieldDelegate{
     @IBAction func cancel(){
         //IBAction永远不返回值
 //        dismiss(animated: true, completion: nil )
-        delegate?.addItemControllerDidCancel(self)
+        delegate?.itemDetailControllerDidCancel(self)
         //这里的问号表示如果delegate为nil的话就不要发送消息，存在则发送消息。这叫 “可选型链接”
     }
     
@@ -44,13 +44,13 @@ class AddItemViewController: UITableViewController, UITextFieldDelegate{
             //首先检查itemToEdit是否包含一个对象，然后使用if let进行解包
             item.text = textField.text!
             //不为空则在文本框中放入一条已经存在的ChecklistItem对象
-            delegate?.addItemController(self, didFinishEditing: item)
+            delegate?.itemDetailController(self, didFinishEditing: item)
             //调用didFinishEditing方法
         } else {
             let item = ChecklistItem()
             item.text = textField.text!
             item.checked = false
-            delegate?.addItemController(self, didFinishadding: item)
+            delegate?.itemDetailController(self, didFinishadding: item)
         }
     }
     
