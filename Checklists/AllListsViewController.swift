@@ -14,7 +14,9 @@
 
 import UIKit
 
-class AllListsViewController: UITableViewController {
+class AllListsViewController: UITableViewController,ListDetailViewControllerDelegate {
+//添加ListDetailViewControllerDelegate来使得它遵循这个一个协议，然后拓展prepare(for:sender:)
+//然后在底部添加协议方法
     
     var lists: [Checklist]
     
@@ -67,11 +69,19 @@ class AllListsViewController: UITableViewController {
         return cell
     }
     
-    //用代码设计cell单元
+    //添加table view的数据来源允许用户删除某一条记录
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath){
+        lists.remove(at: indexPath.row)
+        let indexPaths = [indexPath]
+        tableView.deleteRows(at: indexPaths, with: .automatic)
+    }
+    
+    //手动创建 - 用代码设计cell单元
     func makeCell(for tableView: UITableView) -> UITableViewCell {
         // -> UITableViewCell : 这里调用的是UITableViewCell而不是UITableView
         let cellIdentifier = "Cell"
         if let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) {
+            //使用dequeueReuasableCell()进行重用cell
             return cell
         } else {
             return UITableViewCell(style: .default, reuseIdentifier: cellIdentifier)
@@ -80,8 +90,49 @@ class AllListsViewController: UITableViewController {
     
     //手动执行转场。调用performSegue(withIdentifier,sender)
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        performSegue(withIdentifier: "ShowChecklist", sender: nil)
+        let checklist = lists[indexPath.row]
+        performSegue(withIdentifier: "ShowChecklist", sender: checklist)
+        //现在sender用来传递用户点击的那一行的Checklist对象。
+        //然后在AllListsViewController.swift里添加方法override func prepare(for:sender:)
+    }
+    
+    //将sender的参数checklist给到ChecklistViewController。
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "ShowChecklist" {
+            let controller = segue.destination as! ChecklistViewController
+            controller.checklist = sender as! Checklist
+            //controller.checklist被sender的Checklist对象填充，并且viewDidLoad()可以据此修改界面的标题。
+        } else if segue.identifier == "AddChecklist" {
+            //寻找导航控制器中的视图控制器，并且设置它的delegate为self
+            let navigationController = segue.destination as! UINavigationController
+            let controller = navigationController.topViewController as! ListDetailViewController
+            controller.delegate = self
+            controller.checklistToEdit = nil
+        }
     }
 
+    //以下方法会在用户点击Cancel或Done按钮时被调用
+    func listDetailViewControllerDidCancel(_ controller: ListDetailViewController) {
+        dismiss(animated: true, completion: nil)
+    }
+
+    func listDetailViewController(_ controller: ListDetailViewController, didFinishAdding checklist: Checklist) {
+        let newRowIndex = lists.count
+        lists.append(checklist)
+        let indexPath = IndexPath(row: newRowIndex, section: 0)
+        let indexPaths = [indexPath]
+        tableView.insertRows(at: indexPaths, with: .automatic)
+        dismiss(animated: true, completion: nil)
+    }
+    
+    func listDetailViewController(_ controller: ListDetailViewController, didFinishEditing checklist: Checklist) {
+        if let index = lists.index(of: checklist) {
+            let indexPath = IndexPath(row:index, section: 0)
+            if let cell = tableView.cellForRow(at: indexPath) {
+                cell.textLabel!.text = checklist.name
+            }
+        }
+        dismiss(animated: true, completion: nil)
+    }
 
 }

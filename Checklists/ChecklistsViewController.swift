@@ -10,15 +10,7 @@
 
 import UIKit
 
-protocol ItemDetailViewControllerDelegate: class {
-    //搭建ChecklistViewController与ItemDetailViewController的通信桥梁。
-    //protocol 协议。是一组方法的名称列表。表示：任何遵循这一协议的对象必须执行其中的方法。
-    func itemDetailControllerDidCancel(_ controller: ItemDetailViewController)
-    //用于用户点击Cancel时
-    func itemDetailController(_ controller: ItemDetailViewController, didFinishadding item: ChecklistItem)
-    //用于用户点击Done按钮时。在这个情况下，didFinishAdding参数会传递新的ChecklistItem对象。
-    func itemDetailController(_ controller: ItemDetailViewController, didFinishEditing item: ChecklistItem)
-}
+
 
 class ChecklistViewController: UITableViewController,ItemDetailViewControllerDelegate {
     //添加ItemDetailViewControllerDelegate让ChecklistViewController承诺执行ItemDetailViewControllerDelegate协议中的内容
@@ -27,6 +19,8 @@ class ChecklistViewController: UITableViewController,ItemDetailViewControllerDel
     //这一行声明了items会用来存储一个ChecklistItem对象的数组
     //但是它并没有实际创建一个数组
     //在这一时刻，items还没有值
+    
+    var checklist: Checklist!
     
     
     required init?(coder aDecoder: NSCoder) {
@@ -132,7 +126,9 @@ class ChecklistViewController: UITableViewController,ItemDetailViewControllerDel
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        title = checklist.name
+        //执行转场时，会将这个checklist对象给到ChecklistViewController,也就是将导航栏的标题修改为Checklist对象的名称。
+        //与此同时在AllListController.swift中，将tableView(didSelectRowAt)进行修改。
     }
 
     override func didReceiveMemoryWarning() {
@@ -225,6 +221,7 @@ class ChecklistViewController: UITableViewController,ItemDetailViewControllerDel
                 //将获取的行数放入itemToEdit
             }
         }
+        
     }
     
     //添加从右向左滑的删除功能
@@ -304,6 +301,7 @@ class ChecklistViewController: UITableViewController,ItemDetailViewControllerDel
         saveChecklistItem()
         //该方法修改了items数组，所以需要调用保存方法
     }
+    
     
 }
 
