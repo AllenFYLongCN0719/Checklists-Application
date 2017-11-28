@@ -76,6 +76,20 @@ class AllListsViewController: UITableViewController,ListDetailViewControllerDele
         tableView.deleteRows(at: indexPaths, with: .automatic)
     }
     
+    //修改已存在条目的方法。手动从故事模版中读取这个新的视图控制器。（扩展视图响应）
+    override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
+        //为Add/Edit Checklist界面创建了新的视图控制器对象，并且展现在屏幕上。
+        let navigationController = storyboard!.instantiateViewController(withIdentifier: "ListDetailNavgationController") as! UINavigationController
+        //这个视图控制器被嵌入在故事模版中，并请求故事模版读取它。确定storyboard不会为nil，所以使用感叹号强制解包。
+        //在指向List Detail View Controller的导航器视图的身份检查器中，将ListDetailNavgationController添加在Storybord ID里。
+        //原因是ListDetailViewController是嵌入在导航控制器内部中的，如果将Storyboard ID填在ListDetailViewController里，导航控制器将无法被看到也就是被为空。
+        let controller = navigationController.topViewController as! ListDetailViewController
+        controller.delegate = self
+        let checklist = lists[indexPath.row]
+        controller.checklistToEdit = checklist
+        present(navigationController, animated: true, completion: nil)
+    }
+    
     //手动创建 - 用代码设计cell单元
     func makeCell(for tableView: UITableView) -> UITableViewCell {
         // -> UITableViewCell : 这里调用的是UITableViewCell而不是UITableView

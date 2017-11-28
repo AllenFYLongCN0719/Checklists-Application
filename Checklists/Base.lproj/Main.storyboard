@@ -257,7 +257,7 @@
         <!--Navigation Controller-->
         <scene sceneID="38E-hf-KTx">
             <objects>
-                <navigationController id="zKA-8y-gLj" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="ListDetailNavgationController" id="zKA-8y-gLj" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="gqa-75-XT5">
                         <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
