@@ -27,19 +27,34 @@ class AllListsViewController: UITableViewController,ListDetailViewControllerDele
         super.init(coder: aDecoder)
         //调用init?(coder)父类的初始化方法。
         
-        var list = Checklist(name: "Birthdays")
-        //创建一个新的Checklist对象，给它一个名称。这里使用Checklist(name:)需要在Checklist.swift中添加自建方法init(name: String)
-        lists.append(list)
-        //将它添加到数组中。
+        loadChecklist()
+        //调用加载方法。
+        //并在Checklist.swift中添加NSCoding协议。
         
-        list = Checklist(name: "Groceries")
-        lists.append(list)
-        
-        list = Checklist(name: "Cool Apps")
-        lists.append(list)
-        
-        list = Checklist(name: "To Do")
-        lists.append(list)
+//        var list = Checklist(name: "Birthdays")
+//        //创建一个新的Checklist对象，给它一个名称。这里使用Checklist(name:)需要在Checklist.swift中添加自建方法init(name: String)
+//        lists.append(list)
+//        //将它添加到数组中。
+//
+//        list = Checklist(name: "Groceries")
+//        lists.append(list)
+//
+//        list = Checklist(name: "Cool Apps")
+//        lists.append(list)
+//
+//        list = Checklist(name: "To Do")
+//        lists.append(list)
+//
+//        for list in lists {
+//            //语句重复多次循环执行。
+//            //这里的意思是对每一个在lists数组中的list(Checklist)对象执行以下操作
+//            let item = ChecklistItem()
+//            //创建新的ChecklistItem对象
+//            item.text = "Item for \(list.name)"
+//            //设置它的文本属性为"Item for Birthdays"
+//            list.items.append(item)
+//            //将新的ChecklistItem添加到items数组中
+//        }
     }
 
     override func viewDidLoad() {
@@ -148,5 +163,37 @@ class AllListsViewController: UITableViewController,ListDetailViewControllerDele
         }
         dismiss(animated: true, completion: nil)
     }
-
+    
+    //将在ChecklistsViewController.swift里删掉的代码添加到以下。
+    func documeentsDirectory() -> URL {
+        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        return paths[0]
+    }
+    
+    func dataFilePath() -> URL {
+        return documeentsDirectory().appendingPathComponent("Checklists.plist")
+    }
+    
+    //用于保存的方法现在叫做saveChecklists()
+    func saveChecklist() {
+        let data = NSMutableData()
+        let archiver = NSKeyedArchiver(forWritingWith: data)
+        //这里和之前不同
+        archiver.encode(lists, forKey: "Checklists")
+        archiver.finishEncoding()
+        data.write(to: dataFilePath(), atomically: true)
+    }
+    
+    //用于读取的方法现在叫做loadChecklists()
+    func loadChecklist() {
+        let path = dataFilePath()
+        if let data = try?Data(contentsOf: path) {
+            let unarchiver = NSKeyedUnarchiver(forReadingWith: data)
+            //这里和之前的不同
+            lists = unarchiver.decodeObject(forKey: "Checklists") as! [Checklist]
+            unarchiver.finishDecoding()
+        }
+    }
+    
+    
 }

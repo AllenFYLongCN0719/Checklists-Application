@@ -15,94 +15,94 @@ import UIKit
 class ChecklistViewController: UITableViewController,ItemDetailViewControllerDelegate {
     //添加ItemDetailViewControllerDelegate让ChecklistViewController承诺执行ItemDetailViewControllerDelegate协议中的内容
     
-    var items: [ChecklistItem]
-    //这一行声明了items会用来存储一个ChecklistItem对象的数组
-    //但是它并没有实际创建一个数组
-    //在这一时刻，items还没有值
+//    var items: [ChecklistItem]
+//    //这一行声明了items会用来存储一个ChecklistItem对象的数组
+//    //但是它并没有实际创建一个数组
+//    //在这一时刻，items还没有值
     
     var checklist: Checklist!
     
     
-    required init?(coder aDecoder: NSCoder) {
-        //对象的init方法或初始化器
-        items = [ChecklistItem]()
-        //创建数组对象
-        //这一行实例化了这个数组。现在items包含了一个有效的数组对象
-        //但是这个数组内部还不存在ChecklistItem对象
-        
-        let row0item = ChecklistItem()
-        //这一行实例化了一个新的ChecklistItem对象。注意这里有一对圆括号
-        
-        row0item.text = "Walk the dog"
-        row0item.checked = false
-        //给这个新的ChecklistItem对象内部的数据项赋值。
-        
-        items.append(row0item)
-        //这一行负责将ChecklistItem对象添加到数组中去。
-        
-        let row1item = ChecklistItem()
-        row1item.text = "Brush my teeth"
-        row1item.checked = true
-        items.append(row1item)
-        
-        let row2item = ChecklistItem()
-        row2item.text = "Learn iOS development"
-        row2item.checked = true
-        items.append(row2item)
-        
-        let row3item = ChecklistItem()
-        row3item.text = "Soccer practice"
-        row3item.checked = false
-        items.append(row3item)
-        
-        let row4item = ChecklistItem()
-        row4item.text = "Eat ice cream"
-        row4item.checked = true
-        items.append(row4item)
-        
-        let row5item = ChecklistItem()
-        row5item.text = "1Eat ice cream"
-        row5item.checked = false
-        items.append(row5item)
-        
-        let row6item = ChecklistItem()
-        row6item.text = "2Eat ice cream"
-        row6item.checked = true
-        items.append(row6item)
-        
-        super.init(coder: aDecoder)
-        //调用了父级的init()。调用super.init(coder)，确保这个视图控制器的剩余部分可以正常的从故事模版中解码。
-        loadChecklistItems()
-        //调用其他的方法，这里是调用了一个新的方法，这个新方法的作用是从plist文件中读取数据。
-        
-        print("Documents folder is \(documentsDirectory())")
-        print("Data file path is \(dataFilePath())")
-    }
+//    required init?(coder aDecoder: NSCoder) {
+//        //对象的init方法或初始化器
+//        items = [ChecklistItem]()
+//        //创建数组对象
+//        //这一行实例化了这个数组。现在items包含了一个有效的数组对象
+//        //但是这个数组内部还不存在ChecklistItem对象
+//
+//        let row0item = ChecklistItem()
+//        //这一行实例化了一个新的ChecklistItem对象。注意这里有一对圆括号
+//
+//        row0item.text = "Walk the dog"
+//        row0item.checked = false
+//        //给这个新的ChecklistItem对象内部的数据项赋值。
+//
+//        items.append(row0item)
+//        //这一行负责将ChecklistItem对象添加到数组中去。
+//
+//        let row1item = ChecklistItem()
+//        row1item.text = "Brush my teeth"
+//        row1item.checked = true
+//        items.append(row1item)
+//
+//        let row2item = ChecklistItem()
+//        row2item.text = "Learn iOS development"
+//        row2item.checked = true
+//        items.append(row2item)
+//
+//        let row3item = ChecklistItem()
+//        row3item.text = "Soccer practice"
+//        row3item.checked = false
+//        items.append(row3item)
+//
+//        let row4item = ChecklistItem()
+//        row4item.text = "Eat ice cream"
+//        row4item.checked = true
+//        items.append(row4item)
+//
+//        let row5item = ChecklistItem()
+//        row5item.text = "1Eat ice cream"
+//        row5item.checked = false
+//        items.append(row5item)
+//
+//        let row6item = ChecklistItem()
+//        row6item.text = "2Eat ice cream"
+//        row6item.checked = true
+//        items.append(row6item)
+//
+//        super.init(coder: aDecoder)
+//        //调用了父级的init()。调用super.init(coder)，确保这个视图控制器的剩余部分可以正常的从故事模版中解码。
+//        loadChecklistItems()
+//        //调用其他的方法，这里是调用了一个新的方法，这个新方法的作用是从plist文件中读取数据。
+//
+//        print("Documents folder is \(documentsDirectory())")
+//        print("Data file path is \(dataFilePath())")
+//    }
     
-    func saveChecklistItem() {
-        let data = NSMutableData()
-        //数据被放置在一个NSMutableData对象中。
-        let archiver = NSKeyedArchiver(forWritingWith: data)
-        //NSCoder创建plist文件的形式，将数组编码（encode）并且将其中的所有ChecklistItem转换为二进制格式，这样就可以将这些数据写入文件了。
-        archiver.encode(items, forKey: "ChecklistItems")
-        //调用encode(with)需要在ChecklistItem.swift里添加NSCoding
-        archiver.finishEncoding()
-        data.write(to: dataFilePath(), atomically: true)
-        //将自己写入dataFilePath()路径指定的文件中。
-    }
+//    func saveChecklistItem() {
+//        let data = NSMutableData()
+//        //数据被放置在一个NSMutableData对象中。
+//        let archiver = NSKeyedArchiver(forWritingWith: data)
+//        //NSCoder创建plist文件的形式，将数组编码（encode）并且将其中的所有ChecklistItem转换为二进制格式，这样就可以将这些数据写入文件了。
+//        archiver.encode(items, forKey: "ChecklistItems")
+//        //调用encode(with)需要在ChecklistItem.swift里添加NSCoding
+//        archiver.finishEncoding()
+//        data.write(to: dataFilePath(), atomically: true)
+//        //将自己写入dataFilePath()路径指定的文件中。
+//    }
     
-    func loadChecklistItems() {
-        //1 将dataFilePath()的结果放到一个名叫path的临时常量中
-        let path = dataFilePath()
-        //2 试着从Checklists.plist中读取内容到一个新的数据对象中。关键字Try？的意思是“试试”，如果有数据对象就读出来，如果是nil就不读。所以这就是用if let解包的原因。
-        if let data = try?Data(contentsOf: path){
-            //3 当app找到Checklists.plist文件，读取整个数组，创建一个NSKeyedUnarchiver对象，也就是unarchiver，并且要求它将数据解码到items数组中。
-            let unarchiver = NSKeyedUnarchiver(forReadingWith: data)
-            items = unarchiver.decodeObject(forKey: "ChecklistItems") as! [ChecklistItem]
-            //这一步将文件中曾经未解码的ChecklistItem对象的拷贝填充到数组中。
-            unarchiver.finishDecoding()
-        }
-    }
+//    func loadChecklistItems() {
+//        //1 将dataFilePath()的结果放到一个名叫path的临时常量中
+//        let path = dataFilePath()
+//        //2 试着从Checklists.plist中读取内容到一个新的数据对象中。关键字Try？的意思是“试试”，如果有数据对象就读出来，如果是nil就不读。所以这就是用if let解包的原因。
+//        if let data = try?Data(contentsOf: path){
+//            //3 当app找到Checklists.plist文件，读取整个数组，创建一个NSKeyedUnarchiver对象，也就是unarchiver，并且要求它将数据解码到items数组中。
+//            let unarchiver = NSKeyedUnarchiver(forReadingWith: data)
+//            items = unarchiver.decodeObject(forKey: "ChecklistItems") as! [ChecklistItem]
+//            //这一步将文件中曾经未解码的ChecklistItem对象的拷贝填充到数组中。
+//            unarchiver.finishDecoding()
+//        }
+//    }
     
     func configureCheckmark(for cell: UITableViewCell, with item: ChecklistItem){
         //创建方法单独进行处理对勾。
@@ -137,16 +137,16 @@ class ChecklistViewController: UITableViewController,ItemDetailViewControllerDel
     }
     
     
-    //创建用户内容的文档文件夹的地址
-    func documentsDirectory() -> URL {
-        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-        return paths[0]
-    }
+//    //创建用户内容的文档文件夹的地址
+//    func documentsDirectory() -> URL {
+//        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+//        return paths[0]
+//    }
     
-    //使用documentsDirectory()的返回结果构建了路径到存储办事项清单的文件。文件的名称是Checklists.plist，并且这个文件存储在文档目录中。
-    func dataFilePath() -> URL {
-        return documentsDirectory().appendingPathComponent("Checklists.plist")
-    }
+//    //使用documentsDirectory()的返回结果构建了路径到存储办事项清单的文件。文件的名称是Checklists.plist，并且这个文件存储在文档目录中。
+//    func dataFilePath() -> URL {
+//        return documentsDirectory().appendingPathComponent("Checklists.plist")
+//    }
     
 
     
@@ -157,14 +157,14 @@ class ChecklistViewController: UITableViewController,ItemDetailViewControllerDel
         _ tableView: UITableView,                   //参数1 不需要外部名，所以使用 "_ tableView"
         numberOfRowsInSection section: Int)         //参数2 numberOfRowsInSection是参数的外部名称，Section是参数的内部名称，冒号后面的是参数的类型
         -> Int { //返回值类型跟在 -> 后                //返回值
-        return items.count                          //根据item
+        return checklist.items.count                          //根据item
     }
     
     //得到一行数据后，调用第二个方法，将row data放入cell中
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell { //tableView(cellForRowAt)来获得位这一行准备好的cell || IndexPath是数据源的本体，包含两个信息的参数
         let cell = tableView.dequeueReusableCell(withIdentifier: "ChecklistItem", for: indexPath)
         
-        let item = items[indexPath.row]
+        let item = checklist.items[indexPath.row]
         //访问items,也就是[ChecklistItem]中的属性indexPath.row
         configureText(for: cell, with: item)
         //处理string
@@ -181,7 +181,7 @@ class ChecklistViewController: UITableViewController,ItemDetailViewControllerDel
         
         
                 if let cell = tableView.cellForRow(at: indexPath){
-                    let item = items[indexPath.row]
+                    let item = checklist.items[indexPath.row]
                     item.toggleChecked()
 
                 configureCheckmark(for: cell, with: item)
@@ -189,7 +189,7 @@ class ChecklistViewController: UITableViewController,ItemDetailViewControllerDel
         
         
         tableView.deselectRow(at: indexPath, animated: true)
-        saveChecklistItem()
+        //saveChecklistItem()
         //该方法修改了items数组，所以需要调用保存方法
         }
     
@@ -217,7 +217,7 @@ class ChecklistViewController: UITableViewController,ItemDetailViewControllerDel
             if let indexPath = tableView.indexPath(for: sender as! UITableViewCell) {
                 //设置了一个UITableViewCell对象用于定位被点击的那一行的行号相对应的index-path，通过使用tableView.indexPath(for:)
                 //tableView.indexPath(for:)的返回类型为IndexPath?，是一个可选型，这就意味着它可能返回nil。这就是为什么在你使用它前需要用if let来解包的原因。
-                controller.itemToEdit = items[indexPath.row]
+                controller.itemToEdit = checklist.items[indexPath.row]
                 //将获取的行数放入itemToEdit
             }
         }
@@ -227,13 +227,13 @@ class ChecklistViewController: UITableViewController,ItemDetailViewControllerDel
     //添加从右向左滑的删除功能
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         //commit editingStyle会激活滑动删除功能
-        items.remove(at: indexPath.row)
+        checklist.items.remove(at: indexPath.row)
         //从数据模型中移除掉这条数据
         let indexPaths = [indexPath]
         //使用一个额临时数组保存index—path对象，也就是这一行
         tableView.deleteRows(at: indexPaths, with: .automatic)
         //告诉table view删除这一行
-        saveChecklistItem()
+        //saveChecklistItem()
         //该方法修改了items数组，所以需要调用保存方法
     }
     
@@ -272,8 +272,8 @@ class ChecklistViewController: UITableViewController,ItemDetailViewControllerDel
     
     //将新的ChecklistItem添加到数据模型和table view中
     func itemDetailController(_ controller: ItemDetailViewController, didFinishadding item: ChecklistItem) {
-        let newRowIndex = items.count
-        items.append(item)
+        let newRowIndex = checklist.items.count
+        checklist.items.append(item)
         //添加到数据模型
         
         let indexPath = IndexPath(row: newRowIndex, section: 0)
@@ -282,13 +282,13 @@ class ChecklistViewController: UITableViewController,ItemDetailViewControllerDel
         //添加到table view
         
         dismiss(animated: true, completion: nil)
-        saveChecklistItem()
+        //saveChecklistItem()
         //该方法修改了items数组，所以需要调用保存方法
     }
     
     //添加新的协议内容itemDetailController(didFinishEditing)
     func itemDetailController(_ controller: ItemDetailViewController, didFinishEditing item: ChecklistItem) {
-        if let index = items.index(of: item) {
+        if let index = checklist.items.index(of: item) {
             //你需要从cell中读取所需的IndexPath，首先你就需要寻找到ChecklistItem对象的行号。行号和ChecklistItem在items数组中的索引值是一致的，然后你通过index(of)方法来返回这个index。
             //因为不能在任意对象上使用index(of)，只能在“相同”的对象上使用它。index(of)以某种方式对你在数组中寻找的对象进与调用它的对象行比较，看看它们是否相等。
             //所以第一种方式是在ChecklistItem.swift中添加"NSObject"进行比较。将ChecklistItem建立在NSObject之上，就可以使它安全的进行比较了。
@@ -298,7 +298,7 @@ class ChecklistViewController: UITableViewController,ItemDetailViewControllerDel
             }
         }
         dismiss(animated: true, completion: nil)
-        saveChecklistItem()
+        //saveChecklistItem()
         //该方法修改了items数组，所以需要调用保存方法
     }
     
