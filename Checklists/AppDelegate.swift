@@ -12,6 +12,7 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+    // UIWindow是app中所有视图中最高级的视图，在app中仅存在一个UIWindow
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
@@ -23,10 +24,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
         // Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.
     }
-
+    
+    //进入
     func applicationDidEnterBackground(_ application: UIApplication) {
-        // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
-        // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+        saveData()
+        //调用saveData()方法
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
@@ -36,11 +38,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     }
-
+    
+    //终止
     func applicationWillTerminate(_ application: UIApplication) {
-        // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+        saveData()
+        //调用saveData()方法
     }
-
-
+    
+    //添加存储的方法。
+    func saveData() {
+        let navigationController = window!.rootViewController as! UINavigationController
+        //确保一个可选型不会为nil,所以在解包时，可以进行强行解包。
+        //向UIWindow的rootViewController请求访问
+        let controller = navigationController.viewControllers[0] as! AllListsViewController
+        //因为UINavigationController没有自己的"rootViewController"，所以需要使用以上代码从视图控制器的数组中找到它。
+        controller.saveChecklist()
+        //调用saveChecklist()方法。
+    }
 }
 
