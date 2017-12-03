@@ -13,10 +13,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     // UIWindow是app中所有视图中最高级的视图，在app中仅存在一个UIWindow
+    
+    let dataModel = DataModel()
 
-
+    
+    //向AllListsViewController分享DataModel实例最佳的地方.这个方法在app一启动时就会被调用。
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        let navigationController = window!.rootViewController as! UINavigationController
+        let controller = navigationController.viewControllers[0] as! AllListsViewController
+        controller.dataModel = dataModel
         return true
     }
 
@@ -52,8 +57,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //向UIWindow的rootViewController请求访问
         let controller = navigationController.viewControllers[0] as! AllListsViewController
         //因为UINavigationController没有自己的"rootViewController"，所以需要使用以上代码从视图控制器的数组中找到它。
-        controller.saveChecklist()
+        dataModel.saveChecklist()
         //调用saveChecklist()方法。
     }
+    
+    
 }
 

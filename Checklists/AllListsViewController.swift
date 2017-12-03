@@ -18,19 +18,22 @@ class AllListsViewController: UITableViewController,ListDetailViewControllerDele
 //添加ListDetailViewControllerDelegate来使得它遵循这个一个协议，然后拓展prepare(for:sender:)
 //然后在底部添加协议方法
     
-    var lists: [Checklist]
+    var dataModel: DataModel!
+    //添加一个新的实例变量
     
-    required init?(coder aDecoder: NSCoder) {
-        lists = [Checklist]()
-        //给lists变量一个值
-        
-        super.init(coder: aDecoder)
-        //调用init?(coder)父类的初始化方法。
-        
-        loadChecklist()
-        //调用加载方法。
-        //并在Checklist.swift中添加NSCoding协议。
-        
+//    var lists: [Checklist]
+    
+//    required init?(coder aDecoder: NSCoder) {
+//        lists = [Checklist]()
+//        //给lists变量一个值
+//
+//        super.init(coder: aDecoder)
+//        //调用init?(coder)父类的初始化方法。
+//
+//        loadChecklist()
+//        //调用加载方法。
+//        //并在Checklist.swift中添加NSCoding协议。
+//
 //        var list = Checklist(name: "Birthdays")
 //        //创建一个新的Checklist对象，给它一个名称。这里使用Checklist(name:)需要在Checklist.swift中添加自建方法init(name: String)
 //        lists.append(list)
@@ -55,7 +58,7 @@ class AllListsViewController: UITableViewController,ListDetailViewControllerDele
 //            list.items.append(item)
 //            //将新的ChecklistItem添加到items数组中
 //        }
-    }
+//    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -68,7 +71,7 @@ class AllListsViewController: UITableViewController,ListDetailViewControllerDele
 
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return lists.count
+        return dataModel.lists.count
         //显示数组中的内容。
     }
 
@@ -76,7 +79,7 @@ class AllListsViewController: UITableViewController,ListDetailViewControllerDele
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = makeCell(for: tableView)
         
-        let checklist = lists[indexPath.row]
+        let checklist = dataModel.lists[indexPath.row]
         cell.textLabel!.text = checklist.name
         //将显示内容放入cell中
         cell.accessoryType = .detailDisclosureButton
@@ -86,7 +89,7 @@ class AllListsViewController: UITableViewController,ListDetailViewControllerDele
     
     //添加table view的数据来源允许用户删除某一条记录
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath){
-        lists.remove(at: indexPath.row)
+        dataModel.lists.remove(at: indexPath.row)
         let indexPaths = [indexPath]
         tableView.deleteRows(at: indexPaths, with: .automatic)
     }
@@ -100,7 +103,7 @@ class AllListsViewController: UITableViewController,ListDetailViewControllerDele
         //原因是ListDetailViewController是嵌入在导航控制器内部中的，如果将Storyboard ID填在ListDetailViewController里，导航控制器将无法被看到也就是被为空。
         let controller = navigationController.topViewController as! ListDetailViewController
         controller.delegate = self
-        let checklist = lists[indexPath.row]
+        let checklist = dataModel.lists[indexPath.row]
         controller.checklistToEdit = checklist
         present(navigationController, animated: true, completion: nil)
     }
@@ -119,7 +122,7 @@ class AllListsViewController: UITableViewController,ListDetailViewControllerDele
     
     //手动执行转场。调用performSegue(withIdentifier,sender)
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let checklist = lists[indexPath.row]
+        let checklist = dataModel.lists[indexPath.row]
         performSegue(withIdentifier: "ShowChecklist", sender: checklist)
         //现在sender用来传递用户点击的那一行的Checklist对象。
         //然后在AllListsViewController.swift里添加方法override func prepare(for:sender:)
@@ -146,8 +149,8 @@ class AllListsViewController: UITableViewController,ListDetailViewControllerDele
     }
 
     func listDetailViewController(_ controller: ListDetailViewController, didFinishAdding checklist: Checklist) {
-        let newRowIndex = lists.count
-        lists.append(checklist)
+        let newRowIndex = dataModel.lists.count
+        dataModel.lists.append(checklist)
         let indexPath = IndexPath(row: newRowIndex, section: 0)
         let indexPaths = [indexPath]
         tableView.insertRows(at: indexPaths, with: .automatic)
@@ -155,7 +158,7 @@ class AllListsViewController: UITableViewController,ListDetailViewControllerDele
     }
     
     func listDetailViewController(_ controller: ListDetailViewController, didFinishEditing checklist: Checklist) {
-        if let index = lists.index(of: checklist) {
+        if let index = dataModel.lists.index(of: checklist) {
             let indexPath = IndexPath(row:index, section: 0)
             if let cell = tableView.cellForRow(at: indexPath) {
                 cell.textLabel!.text = checklist.name
@@ -163,37 +166,5 @@ class AllListsViewController: UITableViewController,ListDetailViewControllerDele
         }
         dismiss(animated: true, completion: nil)
     }
-    
-    //将在ChecklistsViewController.swift里删掉的代码添加到以下。
-    func documeentsDirectory() -> URL {
-        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-        return paths[0]
-    }
-    
-    func dataFilePath() -> URL {
-        return documeentsDirectory().appendingPathComponent("Checklists.plist")
-    }
-    
-    //用于保存的方法现在叫做saveChecklists()
-    func saveChecklist() {
-        let data = NSMutableData()
-        let archiver = NSKeyedArchiver(forWritingWith: data)
-        //这里和之前不同
-        archiver.encode(lists, forKey: "Checklists")
-        archiver.finishEncoding()
-        data.write(to: dataFilePath(), atomically: true)
-    }
-    
-    //用于读取的方法现在叫做loadChecklists()
-    func loadChecklist() {
-        let path = dataFilePath()
-        if let data = try?Data(contentsOf: path) {
-            let unarchiver = NSKeyedUnarchiver(forReadingWith: data)
-            //这里和之前的不同
-            lists = unarchiver.decodeObject(forKey: "Checklists") as! [Checklist]
-            unarchiver.finishDecoding()
-        }
-    }
-    
-    
+
 }
