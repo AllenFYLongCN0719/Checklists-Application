@@ -14,7 +14,7 @@
 
 import UIKit
 
-class AllListsViewController: UITableViewController,ListDetailViewControllerDelegate {
+class AllListsViewController: UITableViewController,ListDetailViewControllerDelegate,UINavigationControllerDelegate {
 //添加ListDetailViewControllerDelegate来使得它遵循这个一个协议，然后拓展prepare(for:sender:)
 //然后在底部添加协议方法
     
@@ -121,12 +121,38 @@ class AllListsViewController: UITableViewController,ListDetailViewControllerDele
     }
     
     //手动执行转场。调用performSegue(withIdentifier,sender)
+    
+    //修改方法。添加能够在运行中断后保存所处页面位置的功能。
+    //增加识别用户是否点击了导航栏上的back按钮，添加控制器的委托。
+    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        UserDefaults.standard.set(indexPath.row, forKey: "ChecklistIndex")
+        //添加的是这一行
+        //这样就将这一行的index存储到UserDefaults下的"ChecklistIndex"中了
+        
         let checklist = dataModel.lists[indexPath.row]
         performSegue(withIdentifier: "ShowChecklist", sender: checklist)
         //现在sender用来传递用户点击的那一行的Checklist对象。
         //然后在AllListsViewController.swift里添加方法override func prepare(for:sender:)
     }
+    
+    //添加 在app启动时检查那条待办事项被选中了，并且通过用代码转场过去。使用viewDidAppear()方法中实现这个操作
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        navigationController?.delegate = self
+        //读取视图控制器内建的导航控制器属性。
+        
+        let index = UserDefaults.standard.integer(forKey: "ChecklistIndex")
+        if index != -1 {
+            //检查UserDefaults是否需要执行转场。
+            //如果"ChecklistIndex"的值为-1,那就是说在App中断前，用户时停留在主界面上的。
+            let checklist = dataModel.lists[index]
+            performSegue(withIdentifier: "ShowChecklist", sender: checklist)
+            //如果值不是-1的话，说明用户在app中断前是停留在某条待办事项上的，所以就需要转场到相应的地方。
+        }
+    }
+    
     
     //将sender的参数checklist给到ChecklistViewController。
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -165,6 +191,15 @@ class AllListsViewController: UITableViewController,ListDetailViewControllerDele
             }
         }
         dismiss(animated: true, completion: nil)
+    }
+    
+    //添加UINavigationControllerDelegate的委托方法
+    func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
+        //back按钮被点击了吗？
+        if viewController === self{
+            //如果back按钮被点击了，新的视图控制器是AllListsViewController自己，这时的值“-1”意味着没有任何一个具体的待办条目被选中
+            UserDefaults.standard.set(-1, forKey: "ChecklistIndex")
+        }
     }
 
 }
