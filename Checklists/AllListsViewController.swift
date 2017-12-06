@@ -130,6 +130,8 @@ class AllListsViewController: UITableViewController,ListDetailViewControllerDele
         //添加的是这一行
         //这样就将这一行的index存储到UserDefaults下的"ChecklistIndex"中了
         
+        dataModel.indexOfSelectedChecklist = indexPath.row
+        
         let checklist = dataModel.lists[indexPath.row]
         performSegue(withIdentifier: "ShowChecklist", sender: checklist)
         //现在sender用来传递用户点击的那一行的Checklist对象。
@@ -143,14 +145,21 @@ class AllListsViewController: UITableViewController,ListDetailViewControllerDele
         navigationController?.delegate = self
         //读取视图控制器内建的导航控制器属性。
         
-        let index = UserDefaults.standard.integer(forKey: "ChecklistIndex")
-        if index != -1 {
+        //let index = UserDefaults.standard.integer(forKey: "ChecklistIndex")
+        
+        let index = dataModel.indexOfSelectedChecklist
+        //使用计算属性来调用UserDefaults。
+        
+        //添加防御型代码防止Checklist.plist与UserDefaults不同步
+        //判断index位于0和数据模型中的checklists数量之间的一个值，避免了向dataModel.lists[index]请求某个index对象时，这个对象不存在的情况。
+        if index >= 0 && index < dataModel.lists.count {
             //检查UserDefaults是否需要执行转场。
             //如果"ChecklistIndex"的值为-1,那就是说在App中断前，用户时停留在主界面上的。
             let checklist = dataModel.lists[index]
             performSegue(withIdentifier: "ShowChecklist", sender: checklist)
             //如果值不是-1的话，说明用户在app中断前是停留在某条待办事项上的，所以就需要转场到相应的地方。
         }
+        
     }
     
     
@@ -198,7 +207,9 @@ class AllListsViewController: UITableViewController,ListDetailViewControllerDele
         //back按钮被点击了吗？
         if viewController === self{
             //如果back按钮被点击了，新的视图控制器是AllListsViewController自己，这时的值“-1”意味着没有任何一个具体的待办条目被选中
-            UserDefaults.standard.set(-1, forKey: "ChecklistIndex")
+            //UserDefaults.standard.set(-1, forKey: "ChecklistIndex")
+            
+            dataModel.indexOfSelectedChecklist = -1
         }
     }
 
