@@ -37,6 +37,9 @@ class DataModel {
         
         registerDefaults()
         //调用方法。
+        
+        handleFirstTime()
+        //新增调用方法。
     }
     
     //从AllListsViewController.swift中剪切出来，再粘贴到DataModel.swift中
@@ -71,14 +74,31 @@ class DataModel {
     }
     
     //添加新的字典实例，将-1添加到键值"ChecklistIndex"中
+    //添加新的设置"FirstTime",检查用户是否首次运行app
     func registerDefaults() {
-        let dictionary: [String: Any] = ["ChecklistIndex": -1]
+        let dictionary: [String: Any] = ["ChecklistIndex": -1, "FirstTime": true]
         //这里的方括号内容是字典而不是数组 [key1: value1, key2: value2, . .]
+        //“FirstTime”跟踪用户是否首次运行app
         UserDefaults.standard.register(defaults: dictionary)
         //当键中不存在值的时候，就会从这个字典中请求值。
         //然后修改init方法。
     }
-
+    
+    func handleFirstTime() {
+        let userDefaults = UserDefaults.standard
+        let firstTime = userDefaults.bool(forKey: "FirstTime")
+    
+        if(firstTime){
+            //使用UserDefaults来检查“FirstTime”的值，如果为true，那么就是app第一次运行
+            lists.append(Checklist(name: "ListOne"))
+            //创建一个新的Checklist对象到数组中去
+            indexOfSelectedChecklist = 0
+            //设置索引为0，用作Checklist对象的索引，来保证app会自动通过AllListsViewController的viewDidAppear()方法转场到新的列表上。
+            userDefaults.set(false, forKey: "FirstTime")
+            userDefaults.synchronize()
+        }
+        
+    }
     
 }
 
