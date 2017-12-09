@@ -35,4 +35,16 @@ class Checklist: NSObject, NSCoding {
         aCoder.encode(items, forKey: "Items")
     }
     //完成这个步骤之后需要删除文件夹中的.plist文件
+    
+    //计数待办事项
+    func countUnCheckedItems() -> Int {
+        //向任何Checklist对象请求其中还没有被打上对勾符号的待办事项的数量，最后返回一个整数型的值。
+        var count = 0
+        for item in items where !item.checked{
+            //使用for循环历遍items数组中的ChecklistItem对象。如果一个item对象的checked属性被设置为false，你就将局部变量count加1.
+            //这里!item.checked是取反。
+            count += 1
+        }
+        return count
+    }
 }

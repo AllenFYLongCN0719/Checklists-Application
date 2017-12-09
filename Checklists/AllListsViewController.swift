@@ -84,6 +84,18 @@ class AllListsViewController: UITableViewController,ListDetailViewControllerDele
         //将显示内容放入cell中
         cell.accessoryType = .detailDisclosureButton
         //设置cell的类型
+        
+        cell.detailTextLabel!.text = "\(checklist.countUnCheckedItems()) Remaining"
+        //调用Checklist中的countUnCheckedItems()方法，并且将count放入一个新的字符串，这个字符串就位于次级标签的文本属性中。
+        let count = checklist.countUnCheckedItems()
+        if checklist.items.count == 0 {
+            cell.detailTextLabel!.text = "No Items"
+            } else if count == 0 {
+                cell.detailTextLabel!.text = "All Done"
+            } else {
+                cell.detailTextLabel!.text = "\(checklist.countUnCheckedItems()) Remaining"
+            }
+        
         return cell
     }
     
@@ -116,7 +128,8 @@ class AllListsViewController: UITableViewController,ListDetailViewControllerDele
             //使用dequeueReuasableCell()进行重用cell
             return cell
         } else {
-            return UITableViewCell(style: .default, reuseIdentifier: cellIdentifier)
+            return UITableViewCell(style: .subtitle, reuseIdentifier: cellIdentifier)
+            //.subtitle会在主标题下添加一个略小一点的次级标题。
         }
     }
     
@@ -211,6 +224,14 @@ class AllListsViewController: UITableViewController,ListDetailViewControllerDele
             
             dataModel.indexOfSelectedChecklist = -1
         }
+    }
+    
+    //添加更新数据的func
+    override func viewWillAppear(_ animated: Bool) {
+        //这个方法与viewDidAppear()是不同的。
+        //viewWillAppear是在viewDidAppear之前被调用。
+        super.viewWillAppear(animated)
+        tableView.reloadData()
     }
 
 }
