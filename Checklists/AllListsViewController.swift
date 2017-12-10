@@ -195,23 +195,20 @@ class AllListsViewController: UITableViewController,ListDetailViewControllerDele
     func listDetailViewControllerDidCancel(_ controller: ListDetailViewController) {
         dismiss(animated: true, completion: nil)
     }
-
+    
+    //执行排序：1. 新增的时候，2. 重命名的时候
     func listDetailViewController(_ controller: ListDetailViewController, didFinishAdding checklist: Checklist) {
-        let newRowIndex = dataModel.lists.count
+        //新增时排序
         dataModel.lists.append(checklist)
-        let indexPath = IndexPath(row: newRowIndex, section: 0)
-        let indexPaths = [indexPath]
-        tableView.insertRows(at: indexPaths, with: .automatic)
+        dataModel.sortChecklists()
+        tableView.reloadData()
         dismiss(animated: true, completion: nil)
     }
     
     func listDetailViewController(_ controller: ListDetailViewController, didFinishEditing checklist: Checklist) {
-        if let index = dataModel.lists.index(of: checklist) {
-            let indexPath = IndexPath(row:index, section: 0)
-            if let cell = tableView.cellForRow(at: indexPath) {
-                cell.textLabel!.text = checklist.name
-            }
-        }
+        //重命名时排序
+        dataModel.sortChecklists()
+        tableView.reloadData()
         dismiss(animated: true, completion: nil)
     }
     

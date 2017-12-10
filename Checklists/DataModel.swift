@@ -6,7 +6,7 @@
 //  Copyright © 2017年 AllenLong. All rights reserved.
 //
 
-//为Checklist和ChecklistItem创建顶级的数据模型对象
+//为Checklist和ChecklistItem创建顶级的数据模型对象DataModel
 
 import Foundation
 
@@ -71,6 +71,8 @@ class DataModel {
             lists = unarchiver.decodeObject(forKey: "Checklists") as! [Checklist]
             unarchiver.finishDecoding()
         }
+        sortChecklists()
+        //确保存在的条目也被同样的规则排序。所以需要当plist文件被加载时也调用了个这个方法。
     }
     
     //添加新的字典实例，将-1添加到键值"ChecklistIndex"中
@@ -98,6 +100,17 @@ class DataModel {
             userDefaults.synchronize()
         }
         
+    }
+    
+    func sortChecklists() {
+        lists.sort(by: {
+            //告知lists数组Checklists的内容要以某种准则排序。
+            //这个准则又闭包提供，也就是花括号内的排序代码。
+            checklist1, checklist2 in
+            return checklist1.name.localizedStandardCompare(checklist2.name) == .orderedAscending
+            //判断一个Checklist对象是否应该排在另一个之前。
+            //localizedStandardCompare()方法会结合区域中的规则比较两个字符串
+        })
     }
     
 }
