@@ -20,6 +20,8 @@ class Checklist: NSObject, NSCoding {
     init(name: String) {
         self.name = name
         //因为参数名称和实例变量都叫做name，所以使用self.name来引用实例变量。这里self是引用当前所处的对象。
+        iconName = "cake"
+        //给所有新的checklist一个Appointments图标。
         super.init()
     }
     
@@ -27,12 +29,15 @@ class Checklist: NSObject, NSCoding {
     required init?(coder aDecoder: NSCoder) {
         name = aDecoder.decodeObject(forKey: "Name") as! String
         items = aDecoder.decodeObject(forKey: "Items") as! [ChecklistItem]
+        iconName = aDecoder.decodeObject(forKey: "IconName") as! String
         super.init()
     }
     
     func encode(with aCoder: NSCoder) {
         aCoder.encode(name, forKey: "Name")
         aCoder.encode(items, forKey: "Items")
+        aCoder.encode(iconName, forKey: "IconName")
+        //添加iconName
     }
     //完成这个步骤之后需要删除文件夹中的.plist文件
     
@@ -47,4 +52,7 @@ class Checklist: NSObject, NSCoding {
         }
         return count
     }
+    
+    var iconName: String
+    
 }
