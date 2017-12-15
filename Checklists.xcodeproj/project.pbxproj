@@ -72,6 +72,7 @@
 				239BC4081FD3F4A3002771BC /* DataModel.swift */,
 				23A63E4E1FCAB89100F3A0EC /* AllListsViewController.swift */,
 				2393E3991FCC560700F953D6 /* ListDetailViewController.swift */,
+				239711371FE2B53200C2F60D /* IconPickerViewController.swift */,
 				2363654E1FC0163F00BB430D /* ChecklistsViewController.swift */,
 				232B8C101FC3140600D9C5C0 /* AddItemViewController.swift */,
 				23A63E501FCAC90B00F3A0EC /* Checklist.swift */,
@@ -80,7 +81,6 @@
 				236365531FC0163F00BB430D /* Assets.xcassets */,
 				236365551FC0163F00BB430D /* LaunchScreen.storyboard */,
 				236365581FC0163F00BB430D /* Info.plist */,
-				239711371FE2B53200C2F60D /* IconPickerViewController.swift */,
 			);
 			path = Checklists;
 			sourceTree = "<group>";

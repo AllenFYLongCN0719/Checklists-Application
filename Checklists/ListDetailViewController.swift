@@ -21,6 +21,7 @@ class ListDetailViewController: UITableViewController, UITextFieldDelegate {
     
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var doneBarButton: UIBarButtonItem!
+    @IBOutlet weak var iconImageView: UIImageView!
     
     weak var delegate: ListDetailViewControllerDelegate?
     
@@ -61,7 +62,11 @@ class ListDetailViewController: UITableViewController, UITextFieldDelegate {
     
     //确保用户无法选择textfield所在行的cell
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-        return nil
+        if indexPath.section == 1{
+            return indexPath
+        } else {
+            return nil
+        }
     }
     
     //添加text field的委托方法，根据用户的输入是否为空来启用或禁用Done按钮。然后在故事面板添加Navigation Controller.
@@ -73,6 +78,9 @@ class ListDetailViewController: UITableViewController, UITextFieldDelegate {
         doneBarButton.isEnabled = (newText.length > 0)
         return true
     }
+    
+    
+    
 }
 
 
