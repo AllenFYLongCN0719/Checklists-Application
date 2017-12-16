@@ -16,7 +16,16 @@ protocol ListDetailViewControllerDelegate: class {
     func listDetailViewController(_ controller: ListDetailViewController,didFinishEditing checklist: Checklist)
 }
 
-class ListDetailViewController: UITableViewController, UITextFieldDelegate {
+class ListDetailViewController: UITableViewController, UITextFieldDelegate, IconPickerViewControllerDelegate {
+    
+    func IconPicker(_ picker: IconPickerViewController, didPick iconName: String) {
+        self.iconName = iconName
+        iconImageView.image = UIImage(named: iconName)
+        let _ = navigationController?.popViewController(animated: true)
+        //因为转场使用的是Show而不是present modally，所以要使用pop
+        //通过let _=告诉Xcode不需要关心popViewController()的返回结果，下划线叫做通配符
+    }
+    
 //静态cell的UITableViewController
     
     @IBOutlet weak var textField: UITextField!
@@ -27,6 +36,8 @@ class ListDetailViewController: UITableViewController, UITextFieldDelegate {
     
     var checklistToEdit: Checklist?
     
+    var iconName = "cake"
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -36,7 +47,9 @@ class ListDetailViewController: UITableViewController, UITextFieldDelegate {
             textField.text = checklist.name
             //将修改的待办事项分类的名称放入text field
             doneBarButton.isEnabled = true
+            iconName = checklist.iconName
         }
+        iconImageView.image = UIImage(named: iconName)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -50,12 +63,23 @@ class ListDetailViewController: UITableViewController, UITextFieldDelegate {
         delegate?.listDetailViewControllerDidCancel(self)
     }
     
+    //告诉IconPickerViewController，PickIcon是它的委托
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "PickIcon" {
+            let controller = segue.destination as! IconPickerViewController
+            controller.delegate = self
+        }
+    }
+    
     @IBAction func done() {
         if let checklist = checklistToEdit {
             checklist.name = textField.text!
+            checklist.iconName = iconName
             delegate?.listDetailViewController(self, didFinishEditing: checklist)
         } else {
             let checklist = Checklist(name: textField.text!)
+            checklist.iconName = iconName
+            //被选择的icon name放入Checklist对象
             delegate?.listDetailViewController(self, didFinishAdding: checklist)
         }
     }
@@ -78,6 +102,7 @@ class ListDetailViewController: UITableViewController, UITextFieldDelegate {
         doneBarButton.isEnabled = (newText.length > 0)
         return true
     }
+    
     
     
     
