@@ -17,19 +17,30 @@ class Checklist: NSObject, NSCoding {
     //然后把调用saveChecklistItems()的行删掉，同时也把init?(coder)删掉。
     
     //创建一个新的init方法，将name作为一个参数
-    init(name: String) {
-        self.name = name
-        //因为参数名称和实例变量都叫做name，所以使用self.name来引用实例变量。这里self是引用当前所处的对象。
-        iconName = "No Icon"
-        //给所有新的checklist一个默认“No Icon”图标。
-        super.init()
+        convenience init(name: String) {
+//        //便利初始化。将一部分工作交给了另一个init方法
+//        self.name = name
+//        //因为参数名称和实例变量都叫做name，所以使用self.name来引用实例变量。这里self是引用当前所处的对象。
+//        iconName = "No Icon"
+//        //给所有新的checklist一个默认“No Icon”图标。
+//        super.init()
+        self.init(name: name, iconName: "No Icon")
+
     }
     
     //添加NSCoding协议的两个方法
+    //从plist读取对象
     required init?(coder aDecoder: NSCoder) {
         name = aDecoder.decodeObject(forKey: "Name") as! String
         items = aDecoder.decodeObject(forKey: "Items") as! [ChecklistItem]
         iconName = aDecoder.decodeObject(forKey: "IconName") as! String
+        super.init()
+    }
+    
+    //同时需要名称及图表名称
+    init(name: String, iconName: String) {
+        self.name = name
+        self.iconName = iconName
         super.init()
     }
     
