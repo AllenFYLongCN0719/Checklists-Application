@@ -109,6 +109,7 @@ class ChecklistViewController: UITableViewController,ItemDetailViewControllerDel
         //with是参数外部名称，item是参数内部名称
         
         let label = cell.viewWithTag(1001) as! UILabel
+        label.textColor = view.tintColor
         
         if  item.checked{
             label.text = "√"
