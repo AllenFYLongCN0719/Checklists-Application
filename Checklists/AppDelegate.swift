@@ -11,7 +11,7 @@ import UserNotifications
 //本地通知框架
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
 
     var window: UIWindow?
     // UIWindow是app中所有视图中最高级的视图，在app中仅存在一个UIWindow
@@ -27,25 +27,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         //调用本地通知
         let center = UNUserNotificationCenter.current()
-                center.requestAuthorization(options: [.alert,.sound], completionHandler: {
-                    granted,error in
-                    if granted {
-                        print("We have permission")
-                    } else {
-                        print("Permission deied")
-                    }
-                })
-        
-        let content = UNMutableNotificationContent()
-        content.title = "Hello"
-        content.body = "I am a local notifcation"
-        content.sound = UNNotificationSound.default()
-        let trigger = UNTimeIntervalNotificationTrigger (timeInterval: 10, repeats: false)
-        let request = UNNotificationRequest(identifier: "MyNotification", content: content, trigger: trigger)
-        center.add(request)
-        //创建了一个新的本地通知，因为timeInterval: 10，所以这个通知会在app运行10秒后被触发
+            center.delegate = self
         
         return true
+    }
+    
+    //这个方法当app仍在运行时又本地通知发布时被调用。
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        print("Received local notification\(notification)")
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
