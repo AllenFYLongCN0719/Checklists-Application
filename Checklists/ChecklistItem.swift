@@ -13,6 +13,10 @@ class ChecklistItem: NSObject,NSCoding {
     var text = "" //储存文本内容
     var checked = false //决定cell是否显示对勾符号
     
+    var dueDate = Date()
+    var shouldRemind = false
+    var itemID: Int
+    
     func toggleChecked() {
         checked = !checked
         //将变量checked的相反值赋予checked
@@ -26,6 +30,9 @@ class ChecklistItem: NSObject,NSCoding {
         //一个ChecklistItem需要保存一个名叫Text的对象，这个对象包含实例变量text的值
         aCoder.encode(checked, forKey: "Checked")
         //一个名为Checked的对象，这个对象包含变量checked的值
+        aCoder.encode(itemID, forKey: "ItemID")
+        aCoder.encode(shouldRemind, forKey:"ShouldRemind")
+        aCoder.encode(dueDate, forKey:"DueDate")
     }
     
     //第二个协议方法 做与encode(with)相反的操作。从NSCoder的解码对象中取得了对象并且将它们放回到原来的变量中。
@@ -36,12 +43,18 @@ class ChecklistItem: NSObject,NSCoding {
         checked = aDecoder.decodeBool(forKey: "Checked")
         //对checked使用的是decodeBool。
         
+        dueDate = aDecoder.decodeObject(forKey: "DueDate") as! Date
+        shouldRemind = aDecoder.decodeBool(forKey: "ShouldRemind")
+        itemID = aDecoder.decodeInteger(forKey: "ItemID")
+        
         super.init()
         //初始化对象
     }
     
     //当我们用到了init?(coder)，所以就必须写出init()
     override init(){
+        itemID = DataModel.nextChecklistItemID()
+        //给itemID分配一个值
         super.init()
     }
     

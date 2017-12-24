@@ -78,7 +78,7 @@ class DataModel {
     //添加新的字典实例，将-1添加到键值"ChecklistIndex"中
     //添加新的设置"FirstTime",检查用户是否首次运行app
     func registerDefaults() {
-        let dictionary: [String: Any] = ["ChecklistIndex": -1, "FirstTime": true]
+        let dictionary: [String: Any] = ["ChecklistIndex": -1, "FirstTime": true, "ChecklistItemID": 0]
         //这里的方括号内容是字典而不是数组 [key1: value1, key2: value2, . .]
         //“FirstTime”跟踪用户是否首次运行app
         UserDefaults.standard.register(defaults: dictionary)
@@ -111,6 +111,16 @@ class DataModel {
             //判断一个Checklist对象是否应该排在另一个之前。
             //localizedStandardCompare()方法会结合区域中的规则比较两个字符串
         })
+    }
+    
+    class func nextChecklistItemID() -> Int {
+        //这个方法从UserDefaults中得到目前的“ChecklistItemID”的值，然后将它加1，然后将之前没有加1的值返回给调用者
+        let userDefaults = UserDefaults.standard
+        let itemID = userDefaults.integer(forKey: "ChecklistItemID")
+        userDefaults.set(itemID + 1, forKey: "ChecklistItemID")
+        userDefaults.synchronize()
+        //强制实时的将变化写入磁盘。保证不会丢失数据，从而保证不会出现重复的值
+        return itemID
     }
     
 }
