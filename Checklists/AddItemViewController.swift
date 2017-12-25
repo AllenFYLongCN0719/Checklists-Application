@@ -34,6 +34,8 @@ class ItemDetailViewController: UITableViewController, UITextFieldDelegate{
     // ? 代表委托时可选型
     
     @IBOutlet weak var textField: UITextField!
+    @IBOutlet weak var shouldRemindSwitch: UISwitch!
+    @IBOutlet weak var dueDateLabel: UILabel!
     
     var itemToEdit: ChecklistItem?
     //这个变量包含用户准备编辑的ChecklistItem对象。但是当新增一个待办项目时，itemToEdit会是nil，这就是视图控制器如何区分新增和编辑的。

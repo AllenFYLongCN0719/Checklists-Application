@@ -32,6 +32,7 @@ class ListDetailViewController: UITableViewController, UITextFieldDelegate, Icon
     @IBOutlet weak var doneBarButton: UIBarButtonItem!
     @IBOutlet weak var iconImageView: UIImageView!
     
+    
     weak var delegate: ListDetailViewControllerDelegate?
     
     var checklistToEdit: Checklist?
