@@ -41,6 +41,8 @@ class ItemDetailViewController: UITableViewController, UITextFieldDelegate{
     //这个变量包含用户准备编辑的ChecklistItem对象。但是当新增一个待办项目时，itemToEdit会是nil，这就是视图控制器如何区分新增和编辑的。
     //所以它必须时可选型的。这个就是问号的作用。
     
+    var dueDate = Date()
+    
     @IBAction func cancel(){
         //IBAction永远不返回值
 //        dismiss(animated: true, completion: nil )
@@ -56,12 +58,20 @@ class ItemDetailViewController: UITableViewController, UITextFieldDelegate{
             //首先检查itemToEdit是否包含一个对象，然后使用if let进行解包
             item.text = textField.text!
             //不为空则在文本框中放入一条已经存在的ChecklistItem对象
+            
+            item.shouldRemind = shouldRemindSwitch.isOn
+            item.dueDate = dueDate
+            
             delegate?.itemDetailController(self, didFinishEditing: item)
             //调用didFinishEditing方法
         } else {
             let item = ChecklistItem()
             item.text = textField.text!
             item.checked = false
+            
+            item.shouldRemind = shouldRemindSwitch.isOn
+            item.dueDate = dueDate
+            
             delegate?.itemDetailController(self, didFinishadding: item)
         }
     }
@@ -76,7 +86,11 @@ class ItemDetailViewController: UITableViewController, UITextFieldDelegate{
             //改变导航栏名称为“Edit Item”
             textField.text = item.text
             doneBarButton.isEnabled = true
+            
+            shouldRemindSwitch.isOn = item.shouldRemind
+            dueDate = item.dueDate
         }
+        updateDueDateLabel()
     }
     
     //table view的委托方法。当用户点击某一行时，table view发送一个“willSelectRowAt”的委托，意思是“我马上要选择这一行了”。
@@ -121,6 +135,15 @@ class ItemDetailViewController: UITableViewController, UITextFieldDelegate{
         return true
     }
     
+    func updateDueDateLabel() {
+        let formtter = DateFormatter()
+        //使用DateFormatter来将日期转换为文本
+        formtter.dateStyle = .medium
+        //将date部分设置一个风格
+        formtter.timeStyle = .short
+        //time部分设置另外一个风格，并且从中获得格式好的Date对象
+        dueDateLabel.text = formtter.string(from: dueDate)
+    }
     
     
     
