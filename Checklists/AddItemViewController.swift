@@ -36,12 +36,17 @@ class ItemDetailViewController: UITableViewController, UITextFieldDelegate{
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var shouldRemindSwitch: UISwitch!
     @IBOutlet weak var dueDateLabel: UILabel!
+    @IBOutlet weak var datePickerCell: UITableViewCell!
+    @IBOutlet weak var datePicker: UIDatePicker!
     
     var itemToEdit: ChecklistItem?
     //这个变量包含用户准备编辑的ChecklistItem对象。但是当新增一个待办项目时，itemToEdit会是nil，这就是视图控制器如何区分新增和编辑的。
     //所以它必须时可选型的。这个就是问号的作用。
     
     var dueDate = Date()
+    
+    var datePickerVisible = false
+    //添加一个新的实例变量来跟踪时间选择器是否可见
     
     @IBAction func cancel(){
         //IBAction永远不返回值
@@ -106,6 +111,15 @@ class ItemDetailViewController: UITableViewController, UITextFieldDelegate{
         textField.becomeFirstResponder()
     }
     
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if indexPath.section == 1 && indexPath.row == 2 {
+            //if语句检查cellForRowAt是否被date picker的indexPath调用。如果是，它返回你刚设计的的datePickerCell。
+            return datePickerCell
+        } else {
+            return super.tableView(tableView, cellForRowAt: indexPath)
+        }
+    }
+    
     @IBOutlet weak var doneBarButton: UIBarButtonItem!
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String)-> Bool {
@@ -145,7 +159,11 @@ class ItemDetailViewController: UITableViewController, UITextFieldDelegate{
         dueDateLabel.text = formtter.string(from: dueDate)
     }
     
-    
+    func showDatePicker() {
+        datePickerVisible = true
+        let indexPathDatePicker = IndexPath(row: 2, section: 1)
+        tableView.insertRows(at: [indexPathDatePicker], with: .fade)
+    }
     
     
 }
