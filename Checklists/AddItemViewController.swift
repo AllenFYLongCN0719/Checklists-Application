@@ -101,7 +101,12 @@ class ItemDetailViewController: UITableViewController, UITextFieldDelegate{
     //table view的委托方法。当用户点击某一行时，table view发送一个“willSelectRowAt”的委托，意思是“我马上要选择这一行了”。
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
         //“？“和”！“在这里代表允许返回空值
-        return nil
+        if indexPath.section == 1 && indexPath.row == 1{
+            return indexPath
+            //现在due date这一行会被选中，而其他行不会
+        } else {
+            return nil
+        }
         //委托通过返回nil这个特殊的值来禁用这一行，它的意思是“对不起，你不能这样做”
         //nil这个特殊的值在这里代表的就是”没有值“
     }
@@ -118,6 +123,46 @@ class ItemDetailViewController: UITableViewController, UITextFieldDelegate{
         } else {
             return super.tableView(tableView, cellForRowAt: indexPath)
         }
+    }
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        //如果date picker可见，那么section 1就有三行，如果不可见，则仅返回原始的数据源。
+        if section == 1 && datePickerVisible {
+            return 3
+        } else {
+            return super.tableView(tableView, numberOfRowsInSection: section)
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        //通过使用heightForRowAt来控制每个cell的高度
+        if indexPath.section == 1 && indexPath.row == 2{
+            return 217
+            //如果是date picker所属的cell的话，设置它的高为217.
+        } else {
+            return super.tableView(tableView, heightForRowAt: indexPath)
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        //datePicker仅在用户点击due date这一行的cell时才会显示。
+        tableView.deselectRow(at: indexPath, animated: true)
+        textField.resignFirstResponder()
+        
+        if indexPath.section == 1 && indexPath.row == 1 {
+            //当due date这一行被点击后调用showDatePicker()。
+            showDatePicker()
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, indentationLevelForRowAt indexPath: IndexPath) -> Int {
+        //需要提供委托方法tableView(indentationLevelForRowAt)
+        //方法的作用是在date picker显示时欺骗数据源，使它确信这一行真的存在，这就是indentationLevelForRowAt这个方法的作用。
+        var newIndexPath = indexPath
+        if indexPath.section == 1 && indexPath.row == 2 {
+            newIndexPath = IndexPath(row: 0, section: indexPath.section)
+        }
+        return super.tableView(tableView, indentationLevelForRowAt: newIndexPath)
     }
     
     @IBOutlet weak var doneBarButton: UIBarButtonItem!
