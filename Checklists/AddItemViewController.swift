@@ -81,6 +81,13 @@ class ItemDetailViewController: UITableViewController, UITextFieldDelegate{
         }
     }
     
+    @IBAction func dateChanged (_ datePicker: UIDatePicker) {
+        //使用date picker的时间来更新dueDate，然后更新Due Date这一行的标签
+        dueDate = datePicker.date
+        updateDueDateLabel()
+    }
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -151,7 +158,11 @@ class ItemDetailViewController: UITableViewController, UITextFieldDelegate{
         
         if indexPath.section == 1 && indexPath.row == 1 {
             //当due date这一行被点击后调用showDatePicker()。
-            showDatePicker()
+            if !datePickerVisible{
+                showDatePicker()
+            } else {
+                hideDatePicker()
+            }
         }
     }
     
@@ -206,9 +217,43 @@ class ItemDetailViewController: UITableViewController, UITextFieldDelegate{
     
     func showDatePicker() {
         datePickerVisible = true
+        let indexPathDateRow = IndexPath(row: 1, section: 1)
         let indexPathDatePicker = IndexPath(row: 2, section: 1)
+        
+        if let dateCell = tableView.cellForRow(at: indexPathDateRow) {
+            dateCell.detailTextLabel!.textColor = dateCell.detailTextLabel!.tintColor
+            //将detailTextLabel的颜色设置为了tint color
+        }
+        
+        tableView.beginUpdates()
         tableView.insertRows(at: [indexPathDatePicker], with: .fade)
+        tableView.reloadRows(at: [indexPathDateRow], with: .none)
+        tableView.endUpdates()
+        //因为在同一时间对这个table view进行了两种操作，插入一个新行并且重新加载另一个，你需要把它们放在叫做beginUpdated()和endUpdated()的东西之间，这样就可以同时更新所有东西
+        
+        datePicker.setDate(dueDate, animated:false)
     }
     
+    func hideDatePicker() {
+        if datePickerVisible {
+            datePickerVisible = false
+            
+            let indexPathDateRow = IndexPath(row: 1, section: 1)
+            let indexPathDatePicker = IndexPath(row: 2, section: 1)
+            
+            if let cell = tableView.cellForRow(at: indexPathDateRow) {
+                cell.detailTextLabel!.textColor = UIColor(white: 0, alpha: 0.5)
+            }
+            
+            tableView.beginUpdates()
+            tableView.reloadRows(at: [indexPathDateRow], with: .none)
+            tableView.deleteRows(at: [indexPathDatePicker], with: .fade)
+            tableView.endUpdates()
+        }
+    }
     
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        //当用户点击text field的时候，需要把date picker隐藏起来。
+        hideDatePicker()
+    }
 }
