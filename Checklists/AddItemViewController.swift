@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import UserNotifications
 
 protocol ItemDetailViewControllerDelegate: class {
     //搭建ChecklistViewController与ItemDetailViewController的通信桥梁。
@@ -59,6 +60,7 @@ class ItemDetailViewController: UITableViewController, UITextFieldDelegate{
 //        print("Contents of the text filed: \(textField.text!)")
 //        dismiss(animated: true, completion: nil)
         
+        
         if let item = itemToEdit {
             //首先检查itemToEdit是否包含一个对象，然后使用if let进行解包
             item.text = textField.text!
@@ -66,6 +68,8 @@ class ItemDetailViewController: UITableViewController, UITextFieldDelegate{
             
             item.shouldRemind = shouldRemindSwitch.isOn
             item.dueDate = dueDate
+            item.scheduleNotification()
+            //调用通知功能
             
             delegate?.itemDetailController(self, didFinishEditing: item)
             //调用didFinishEditing方法
@@ -76,6 +80,8 @@ class ItemDetailViewController: UITableViewController, UITextFieldDelegate{
             
             item.shouldRemind = shouldRemindSwitch.isOn
             item.dueDate = dueDate
+            item.scheduleNotification()
+            //调用通知功能
             
             delegate?.itemDetailController(self, didFinishadding: item)
         }
@@ -85,6 +91,17 @@ class ItemDetailViewController: UITableViewController, UITextFieldDelegate{
         //使用date picker的时间来更新dueDate，然后更新Due Date这一行的标签
         dueDate = datePicker.date
         updateDueDateLabel()
+    }
+    
+    @IBAction func shouldRemindToggled(_ switchControl: UISwitch) {
+        textField.resignFirstResponder()
+        
+        if switchControl.isOn {
+            let center = UNUserNotificationCenter.current()
+            center.requestAuthorization(options: [.alert,.sound], completionHandler: {
+                granted, error in /*do nothing*/
+            })
+        }
     }
     
     

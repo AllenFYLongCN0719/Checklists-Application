@@ -7,6 +7,9 @@
 //
 
 import Foundation
+import UserNotifications
+//导入通知框架。
+
 class ChecklistItem: NSObject,NSCoding {
     //添加NSCoding后需要添加encode的方法，以此遵守协议。
     //NSCoding协议中的方法是 func encode(with aCoder: NSCoder) 和 init?(coder aDecoder: NSCoder)
@@ -58,4 +61,30 @@ class ChecklistItem: NSObject,NSCoding {
         super.init()
     }
     
+    //安排本地通知
+    func scheduleNotification() {
+        if shouldRemind && dueDate > Date() {
+            //对比due date和当前时间，使用Date对象来获得当前时间。
+            //语句dueDate>Date()比较两个时间后返回true和false
+            
+            //1 将item的文本放入通知中
+            let content = UNMutableNotificationContent()
+            content.title = "Reminder"
+            content.body = text
+            content.sound = UNNotificationSound.default()
+            //2 从dueDate中提取月、日、小时和分钟。
+            let calender = Calendar(identifier: .gregorian)
+            let components = calender.dateComponents([.month,.day,.hour,.minute], from: dueDate)
+            //3 使用Trigger来展示详细的时间
+            let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
+            //4 创建UNNotificationRequest对象。
+            let request = UNNotificationRequest(identifier: "\(itemID)", content: content, trigger: trigger)
+            //5 添加新的通知到UNUserNotificationCenter
+            let center = UNUserNotificationCenter.current()
+            center.add(request)
+            
+            print("We should schedule a notification")
+            
+        }
+    }
 }
