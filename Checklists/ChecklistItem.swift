@@ -63,6 +63,9 @@ class ChecklistItem: NSObject,NSCoding {
     
     //安排本地通知
     func scheduleNotification() {
+        
+        removeNotification()
+        
         if shouldRemind && dueDate > Date() {
             //对比due date和当前时间，使用Date对象来获得当前时间。
             //语句dueDate>Date()比较两个时间后返回true和false
@@ -86,5 +89,16 @@ class ChecklistItem: NSObject,NSCoding {
             print("We should schedule a notification")
             
         }
+    }
+    
+    //移除已存在的某条待办事项的通知安排
+    func removeNotification() {
+        let center = UNUserNotificationCenter.current()
+        center.removePendingNotificationRequests(withIdentifiers: ["\(itemID)"])
+    }
+    
+    deinit {
+        //删除某一条待办事项以及删除整个目录的时候被调用
+        removeNotification()
     }
 }

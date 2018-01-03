@@ -122,8 +122,8 @@ class ChecklistViewController: UITableViewController,ItemDetailViewControllerDel
     func configureText(for cell: UITableViewCell, with item: ChecklistItem){
         //创建方法单独进行处理文字。
         let label = cell.viewWithTag(1000) as! UILabel //表格一定会有一个以上的cell，每个cell都会有自己的label，如果使用outlet链接viewcontroller，那么这个outlet只能引用其中一个cell的label
-        //label.text = item.text
-        label.text = "\(item.itemID):\(item.text)"
+        label.text = item.text
+        //label.text = "\(item.itemID):\(item.text)"
     }
     
     override func viewDidLoad() {
